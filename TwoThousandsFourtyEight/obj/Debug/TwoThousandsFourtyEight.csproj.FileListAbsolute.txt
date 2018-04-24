@@ -1,0 +1,6 @@
+/home/alex/Desktop/TwoThousandsFourtyEight/TwoThousandsFourtyEight/bin/Debug/TwoThousandsFourtyEight.exe
+/home/alex/Desktop/TwoThousandsFourtyEight/TwoThousandsFourtyEight/bin/Debug/TwoThousandsFourtyEight.pdb
+/home/alex/Desktop/TwoThousandsFourtyEight/TwoThousandsFourtyEight/obj/Debug/TwoThousandsFourtyEight.csprojResolveAssemblyReference.cache
+/home/alex/Desktop/TwoThousandsFourtyEight/TwoThousandsFourtyEight/obj/Debug/TwoThousandsFourtyEight.csproj.CoreCompileInputs.cache
+/home/alex/Desktop/TwoThousandsFourtyEight/TwoThousandsFourtyEight/obj/Debug/TwoThousandsFourtyEight.exe
+/home/alex/Desktop/TwoThousandsFourtyEight/TwoThousandsFourtyEight/obj/Debug/TwoThousandsFourtyEight.pdb
