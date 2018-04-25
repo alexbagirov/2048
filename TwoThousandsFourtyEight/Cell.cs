@@ -5,17 +5,24 @@ namespace TwoThousandsFourtyEight
     public class Cell
     {
         public int Value;
-        public Color Color;
+        private Color color;
+        public bool Hidden { get; private set; }
         
         public Cell(int value)
         {
             Value = value;
-            Color = GetColor();
+            color = Colors.GetColor(Value);
+
+            if (Value == 0)
+                Hidden = true;
         }
 
-        private Color GetColor()
+        public Color GetColor() => color;
+
+        public void ChangeColor(int value)
         {
-            return Color.Bisque;
+            color = Colors.GetColor(value);
+            Hidden = Value == 0;
         }
     }
 }
