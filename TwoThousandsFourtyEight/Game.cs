@@ -4,7 +4,7 @@ namespace TwoThousandsFourtyEight
 {
     public class Game
     {
-        public Cell[,] Map;
+        public Tile[,] Map;
         public readonly int Width;
         public readonly int Height;
         
@@ -28,7 +28,7 @@ namespace TwoThousandsFourtyEight
                 var y = random.Next(0, Height - 1);
                 if (Map[x, y].Value == 0)
                 {
-                    Map[x, y] = new Cell(2);
+                    Map[x, y] = new Tile(2);
                     break;   
                 }
             }
@@ -36,10 +36,10 @@ namespace TwoThousandsFourtyEight
 
         private void Initialize()
         {
-            Map = new Cell[Width, Height];
+            Map = new Tile[Width, Height];
             for (var i = 0; i < Width; i++)
             for (var j = 0; j < Width; j++)
-                Map[i, j] = new Cell(0);
+                Map[i, j] = new Tile(0);
         }
     }
 }

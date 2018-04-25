@@ -4,7 +4,26 @@ using System.Drawing;
 namespace TwoThousandsFourtyEight
 {
     public class Tile
-    {   
+    {
+        public int Value;
+        public Color Color { get; private set; }
+        public bool Hidden { get; private set; }
+        
+        public Tile(int value)
+        {
+            Value = value;
+            Color = GetColor(Value);
+
+            if (Value == 0)
+                Hidden = true;
+        }
+
+        public void AlterValue(int value)
+        {
+            Color = GetColor(value);
+            Hidden = Value == 0;
+        }
+        
         private static readonly Dictionary<int, Color> Colors = new Dictionary<int, Color>
         {
             {0, ColorTranslator.FromHtml("#bbada0")},
@@ -22,6 +41,5 @@ namespace TwoThousandsFourtyEight
         };
 
         public static Color GetColor(int value) => Colors[value];
-        public static bool Exist(int value) => Colors.ContainsKey(value);
     }
 }
