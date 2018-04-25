@@ -3,9 +3,9 @@ using System.Drawing;
 
 namespace TwoThousandsFourtyEight
 {
-    public class Colors
-    {
-        private static readonly Dictionary<int, Color> NumbersColors = new Dictionary<int, Color>
+    public class Tile
+    {   
+        private static readonly Dictionary<int, Color> Colors = new Dictionary<int, Color>
         {
             {0, ColorTranslator.FromHtml("#bbada0")},
             {2, ColorTranslator.FromHtml("#eee4da")},
@@ -21,6 +21,7 @@ namespace TwoThousandsFourtyEight
             {2048, ColorTranslator.FromHtml("#edc22e")}
         };
 
-        public static Color GetColor(int value) => NumbersColors[value];
+        public static Color GetColor(int value) => Colors[value];
+        public static bool Exist(int value) => Colors.ContainsKey(value);
     }
 }

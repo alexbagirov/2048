@@ -6,23 +6,27 @@ namespace TwoThousandsFourtyEight
     {
         public int Value;
         private Color color;
-        public bool Hidden { get; private set; }
+        private bool hidden;
         
         public Cell(int value)
         {
             Value = value;
-            color = Colors.GetColor(Value);
+            color = Tile.GetColor(Value);
 
             if (Value == 0)
-                Hidden = true;
+                hidden = true;
         }
 
         public Color GetColor() => color;
+        public bool IsHidden() => hidden;
 
         public void ChangeColor(int value)
         {
-            color = Colors.GetColor(value);
-            Hidden = Value == 0;
+            if (Tile.Exist(value))
+            {
+                color = Tile.GetColor(value);
+                hidden = Value == 0;  
+            }
         }
     }
 }
