@@ -32,9 +32,9 @@ namespace Game2048
             set => gameMap[point.X, point.Y] = value;
         }
 
-        public void AddTile(Point point, int value) => this[point].AlterValue(value);
+        public void AddTile(Point point, int value) => this[point].ChangeValue(value);
 
-        public Point GetEmptyTile()
+        public Point GetEmptyTilePosition()
         {
             var random = new Random();
             while (true)
@@ -50,7 +50,7 @@ namespace Game2048
         public void MoveTile(Point from, Point to)
         {
             this[to].AddValue(this[from].Value);
-            this[from].AlterValue(0);
+            this[from].ChangeValue(0);
         }
 
         public bool InBounds(Point point) => 

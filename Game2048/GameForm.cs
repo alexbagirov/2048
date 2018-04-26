@@ -7,17 +7,14 @@ namespace Game2048
     {
         private void RenderText1(PaintEventArgs e)
         {
-            
             TextRenderer.DrawText(e.Graphics, "AAAAAAAA", Font,
                 new Point(10, 10), SystemColors.ControlText);
-
         }
 
         public GameForm(Game game)
         {
             InitializeComponent();
-            this.Paint += (sender, args) => RenderText1(args);
+            Paint += (sender, args) => RenderText1(args);
         }
-
     }
 }

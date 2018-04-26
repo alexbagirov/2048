@@ -90,7 +90,7 @@ namespace Game2048
         public void NewTile()
         {
             var random = new Random();
-            Map.AddTile(Map.GetEmptyTile(), random.NextDouble() < 0.9 ? 2 : 4);
+            Map.AddTile(Map.GetEmptyTilePosition(), random.NextDouble() < 0.9 ? 2 : 4);
         }
     }
 }
