@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using System;
 
-namespace TwoThousandsFourtyEight
+namespace Game2048
 {
     internal class Program
     {
@@ -12,9 +12,14 @@ namespace TwoThousandsFourtyEight
             while (true)
             {
                 game.Print();
-                var movement = Console.ReadLine();
-                game.Move(movement);
-                game.AddCell();
+
+                while (true)
+                {
+                    if (game.TryMove(Console.ReadLine()))
+                        break;
+                    
+                }
+                game.AddTile();
                 Console.Clear();
                 Console.SetCursorPosition(0, 0);
             }

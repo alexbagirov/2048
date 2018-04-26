@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TwoThousandsFourtyEight
+namespace Game2048
 {
     public partial class GameForm : Form
     {

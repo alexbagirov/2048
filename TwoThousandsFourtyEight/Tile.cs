@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 
-namespace TwoThousandsFourtyEight
+namespace Game2048
 {
     public class Tile
     {
@@ -9,11 +9,10 @@ namespace TwoThousandsFourtyEight
         public Color Color { get; private set; }
         public bool Hidden { get; private set; }
         
-        public Tile(int value)
+        public Tile(int value = 0)
         {
             Value = value;
             Color = GetColor(Value);
-
             if (Value == 0)
                 Hidden = true;
         }

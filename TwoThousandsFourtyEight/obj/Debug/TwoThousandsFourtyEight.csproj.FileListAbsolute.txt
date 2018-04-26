@@ -11,3 +11,10 @@ C:\Users\Дима\Desktop\2048\TwoThousandsFourtyEight\obj\Debug\TwoThousandsFou
 C:\Users\Дима\Desktop\2048\TwoThousandsFourtyEight\bin\Debug\TwoThousandsFourtyEight.exe
 C:\Users\Дима\Desktop\2048\TwoThousandsFourtyEight\bin\Debug\TwoThousandsFourtyEight.pdb
 C:\Users\Дима\Desktop\2048\TwoThousandsFourtyEight\bin\Debug\TwoThousandsFourtyEight.exe.config
+C:\Users\БагировАлександрДмит\Desktop\2048\TwoThousandsFourtyEight\obj\Debug\TwoThousandsFourtyEight.csprojResolveAssemblyReference.cache
+C:\Users\БагировАлександрДмит\Desktop\2048\TwoThousandsFourtyEight\obj\Debug\TwoThousandsFourtyEight.csproj.CoreCompileInputs.cache
+C:\Users\БагировАлександрДмит\Desktop\2048\TwoThousandsFourtyEight\obj\Debug\TwoThousandsFourtyEight.exe
+C:\Users\БагировАлександрДмит\Desktop\2048\TwoThousandsFourtyEight\obj\Debug\TwoThousandsFourtyEight.pdb
+C:\Users\БагировАлександрДмит\Desktop\2048\TwoThousandsFourtyEight\bin\Debug\TwoThousandsFourtyEight.exe.config
+C:\Users\БагировАлександрДмит\Desktop\2048\TwoThousandsFourtyEight\bin\Debug\TwoThousandsFourtyEight.exe
+C:\Users\БагировАлександрДмит\Desktop\2048\TwoThousandsFourtyEight\bin\Debug\TwoThousandsFourtyEight.pdb

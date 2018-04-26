@@ -1,4 +1,4 @@
-﻿namespace TwoThousandsFourtyEight
+﻿namespace Game2048
 {
     partial class GameForm
     {
