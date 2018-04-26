@@ -9,7 +9,6 @@ namespace Game2048
     {
         public GameMap Map;
         public bool IsRunning = true;
-        public bool Moved;
         
         public Game(int width, int height)
         {
