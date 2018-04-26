@@ -5,7 +5,6 @@ namespace Game2048
 {
     internal class Program
     {
-
         public static void Main()
         {
             var game = new Game(4, 4);
@@ -15,11 +14,15 @@ namespace Game2048
 
                 while (true)
                 {
-                    if (game.TryMove(Console.ReadLine()))
+                    var move = DirectionParser.Parse(Console.ReadLine());
+                    var moved = false;
+                    if (move != null)
+                        moved = game.TryMove((Direction) move);
+
+                    if (moved)
                         break;
-                    
                 }
-                game.AddTile();
+                game.NewTile();
                 Console.Clear();
                 Console.SetCursorPosition(0, 0);
             }

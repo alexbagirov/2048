@@ -5,7 +5,7 @@ namespace Game2048
 {
     public class Tile
     {
-        public int Value;
+        public int Value { get; private set; }
         public Color Color { get; private set; }
         public bool Hidden { get; private set; }
         
@@ -17,11 +17,14 @@ namespace Game2048
                 Hidden = true;
         }
 
-        public void AlterValue(int value)
+        public void ChangeValue(int value)
         {
-            Color = GetColor(value);
+            Value = value;
+            Color = GetColor(Value);
             Hidden = Value == 0;
         }
+
+        public void AddValue(int value) => ChangeValue(Value + value);
         
         private static readonly Dictionary<int, Color> Colors = new Dictionary<int, Color>
         {

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 
 namespace Game2048
@@ -18,6 +14,7 @@ namespace Game2048
             gameMap = new Tile[width, height];
             Width = width;
             Height = height;
+            
             for (var y = 0; y < Height; y++)
                 for (var x = 0; x < Width; x++)
                     gameMap[x, y] = new Tile();
@@ -25,19 +22,39 @@ namespace Game2048
 
         public Tile this[int x, int y]
         {
-            get { return gameMap[x, y]; }
-            set { gameMap[x, y] = value; }
+            get => gameMap[x, y];
+            set => gameMap[x, y] = value;
         }
 
         public Tile this[Point point]
         {
-            get { return gameMap[point.X, point.Y]; }
-            set { gameMap[point.X, point.Y] = value; }
+            get => gameMap[point.X, point.Y];
+            set => gameMap[point.X, point.Y] = value;
         }
 
-        public bool InBounds(Point point)
+        public void AddTile(Point point, int value) => this[point].ChangeValue(value);
+
+        public Point GetEmptyTilePosition()
         {
-            return point.X < Width && point.Y < Height && point.X >= 0 && point.Y >= 0;
+            var random = new Random();
+            while (true)
+            {
+                var x = random.Next(0, Width);
+                var y = random.Next(0, Height);
+                if (gameMap[x, y].Value != 0)
+                    continue;
+                return new Point(x, y);
+            }
         }
+
+        public void MoveTile(Point from, Point to)
+        {
+            this[to].AddValue(this[from].Value);
+            this[from].ChangeValue(0);
+        }
+
+        public bool InBounds(Point point) => 
+            point.X < Width && point.Y < Height && 
+            point.X >= 0 && point.Y >= 0;
     }
 }
