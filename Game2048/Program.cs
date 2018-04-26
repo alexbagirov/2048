@@ -15,11 +15,30 @@ namespace Game2048
 
                 while (true)
                 {
-                    if (game.TryMove(Console.ReadLine()))
-                        break;
+                    var move = Console.ReadLine();
+                    var moved = false;
+
+                    switch (move)
+                    {
+                        case "W":
+                            moved = game.TryMove(Direction.Up);
+                            break;
+                        case "A":
+                            moved = game.TryMove(Direction.Left);
+                            break;
+                        case "S":
+                            moved = game.TryMove(Direction.Down);
+                            break;
+                        case "D":
+                            moved = game.TryMove(Direction.Right);
+                            break;
+                    }
                     
+                    if (moved)
+                        break;
+
                 }
-                game.AddTile();
+                game.NewTile();
                 Console.Clear();
                 Console.SetCursorPosition(0, 0);
             }

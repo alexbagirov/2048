@@ -10,12 +10,13 @@ namespace Game2048
         public GameMap Map;
         public bool IsRunning = true;
         public bool Moved;
+        
         public Game(int width, int height)
         {
             Map = new GameMap(width, height);
             FillMovePresets();
-            AddTile();
-            AddTile();
+            NewTile();
+            NewTile();
         }
 
         public Dictionary<Direction, MovementPresets> Presets = new Dictionary<Direction, MovementPresets>();
@@ -28,54 +29,45 @@ namespace Game2048
             Presets[Direction.Right] = new MovementPresets(new Point(1, 0), Enumerable.Range(0, Map.Width).Reverse(), Enumerable.Range(0, Map.Height));
         }
 
-        public bool TryMove(string movement)
+        public bool TryMove(Direction direction)
         {
             var moved = false;
-            MovementPresets presets;
-            if (movement == "W")
-                presets = Presets[Direction.Up];
-            else if (movement == "A")
-                presets = Presets[Direction.Left];
-            else if (movement == "S")
-                presets = Presets[Direction.Down];
-            else
-                presets = Presets[Direction.Right];
-            var vector = presets.Vector;
+            
+            var presets = Presets[direction];
             var xRange = presets.XRange;
             var yRange = presets.YRange;
+            
             var mergedTiles = new HashSet<Tile>();
+            
             foreach (var y in yRange)
             {
                 foreach (var x in xRange)
                 {
-                    if (Map[x, y].Value != 0)
+                    if (Map[x, y].Value == 0) 
+                        continue;
+                    
+                    var curPos = new Point(x, y);
+                    while (true)
                     {
-                        var curPos = new Point(x, y);
-                        while (true)
+                        var nextPos = new Point(curPos.X + presets.Vector.X, curPos.Y + presets.Vector.Y);
+                        if (!Map.InBounds(nextPos))
+                            break;
+                        
+                        if (Map[nextPos].Value != 0)
                         {
-                            var nextPos = new Point(curPos.X + vector.X, curPos.Y + vector.Y);
-                            if (!Map.InBounds(nextPos))
-                                break;
-                            if (Map[nextPos].Value != 0)
+                            if (Map[nextPos].Value == Map[curPos].Value && !mergedTiles.Contains(Map[nextPos]))
                             {
-                                if (Map[nextPos].Value == Map[curPos].Value && !mergedTiles.Contains(Map[nextPos]))
-                                {
-                                    Map[nextPos].Value += Map[curPos].Value;
-                                    Map[curPos].Value = 0;
-                                    curPos = nextPos;
-                                    mergedTiles.Add(Map[curPos]);
-                                    moved = true;
-                                }
-                                break;
-                            }
-                            else
-                            {
-                                Map[nextPos].Value += Map[curPos].Value;
-                                Map[curPos].Value = 0;
+                                Map.MoveTile(curPos, nextPos);
                                 curPos = nextPos;
+                                mergedTiles.Add(Map[curPos]);
                                 moved = true;
                             }
+                            break;
                         }
+                        
+                        Map.MoveTile(curPos, nextPos);
+                        curPos = nextPos;
+                        moved = true;
                     }
                 }
             }
@@ -95,20 +87,10 @@ namespace Game2048
             }
         }
 
-        public void AddTile()
+        public void NewTile()
         {
             var random = new Random();
-            while (true)
-            {
-                var x = random.Next(0, Map.Width);
-                var y = random.Next(0, Map.Height);
-                if (Map[x, y].Value == 0)
-                {
-                    var value = random.NextDouble() < 0.9 ? 2 : 4;
-                    Map[x, y] = new Tile(value);
-                    break;
-                }
-            }
+            Map.AddTile(Map.GetEmptyTile(), random.NextDouble() < 0.9 ? 2 : 4);
         }
     }
 }
