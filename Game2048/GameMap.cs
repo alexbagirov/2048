@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Text;
 
 namespace Game2048
 {
@@ -20,17 +21,9 @@ namespace Game2048
                     gameMap[x, y] = new Tile();
         }
 
-        public Tile this[int x, int y]
-        {
-            get => gameMap[x, y];
-            set => gameMap[x, y] = value;
-        }
+        public Tile this[int x, int y] => gameMap[x, y];
 
-        public Tile this[Point point]
-        {
-            get => gameMap[point.X, point.Y];
-            set => gameMap[point.X, point.Y] = value;
-        }
+        public Tile this[Point point] => gameMap[point.X, point.Y];
 
         public void AddTile(Point point, int value) => this[point].ChangeValue(value);
 
@@ -56,5 +49,22 @@ namespace Game2048
         public bool InBounds(Point point) => 
             point.X < Width && point.Y < Height && 
             point.X >= 0 && point.Y >= 0;
+
+        public override string ToString()
+        {
+            var s = new StringBuilder();
+            
+            for (var i = 0; i < Width; i++)
+            {
+                for (var j = 0; j < Height; j++)
+                {
+                    s.Append(gameMap[i, j].Value.ToString() + ' ');
+                }
+
+                s.Append('\n');
+            }
+
+            return s.ToString();
+        }
     }
 }

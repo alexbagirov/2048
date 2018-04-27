@@ -22,7 +22,17 @@ namespace Game2048
                     if (moved)
                         break;
                 }
+
                 game.NewTile();
+                
+                if (game.HasEnded())
+                {
+                    Console.Clear();
+                    Console.WriteLine("GAME ENDED");
+                    game.Print();
+                    break;
+                }
+                
                 Console.Clear();
                 Console.SetCursorPosition(0, 0);
             }
