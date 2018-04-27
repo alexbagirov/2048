@@ -29,7 +29,7 @@ namespace GameTests
         {
             var game = new Game(5, 5);
             var nonZeroTiles = 0;
-            for (var i=0;i<23;i++)
+            for (var i = 0; i < 23; i++)
                 game.AddNewTile();
             for (var y = 0; y < game.Map.Height; y++)
                 for (var x = 0; x < game.Map.Width; x++)
@@ -86,7 +86,6 @@ namespace GameTests
             });
             game.TryMove(Direction.Down);
             Assert.IsTrue(game.IsRunning);
-
         }
     }
 }
