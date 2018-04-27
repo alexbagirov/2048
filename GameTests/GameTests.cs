@@ -62,7 +62,9 @@ namespace GameTests
                 {8,64,0}
             });
             game.TryMove(Direction.Right);
-            Assert.IsFalse(game.IsRunning);
+            game.AddNewTile();
+            Assert.IsTrue(game.HasEnded());
+
             game = TryMoveTests.BuildGameMap(new[,]
            {
                 {2,4,8},
@@ -70,14 +72,17 @@ namespace GameTests
                 {8,32,16}
             });
             game.TryMove(Direction.Up);
-            Assert.IsFalse(game.IsRunning);
+            game.AddNewTile();
+            Assert.IsTrue(game.HasEnded());
+
             game = TryMoveTests.BuildGameMap(new[,]
            {
                 {2,4,8},
                 {8,64,32},
                 {8,32,16}
             });
-            Assert.IsTrue(game.IsRunning);
+            Assert.IsFalse(game.HasEnded());
+
             game = TryMoveTests.BuildGameMap(new[,]
           {
                 {8,32,0},
@@ -85,7 +90,8 @@ namespace GameTests
                 {2,32,16}
             });
             game.TryMove(Direction.Down);
-            Assert.IsTrue(game.IsRunning);
+            game.AddNewTile();
+            Assert.IsFalse(game.HasEnded());
         }
     }
 }
