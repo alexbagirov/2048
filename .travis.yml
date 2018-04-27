@@ -1,0 +1,12 @@
+language: csharp
+solution: Game2048.sln
+mono:
+  - latest
+install:
+  - nuget restore Game2048.sln
+  - nuget restore UnitTestProject1/UnitTestProject1.csproj -SolutionDirectory .
+  - nuget install NUnit.Runners -Version 3.8.0 -OutputDirectory testrunner
+script:
+  - msbuild /p:Configuration=Release Game2048.sln
+  - msbuild /p:Configuration=Release UnitTestProject1/UnitTestProject1.csproj
+  - mono ./testrunner/NUnit.ConsoleRunner.3.8.0/tools/nunit3-console.exe ./UnitTestProject1/bin/Release/UnitTestProject1.dll
