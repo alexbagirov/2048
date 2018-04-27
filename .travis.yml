@@ -1,0 +1,17 @@
+language: csharp
+solution: Game2048.sln
+
+notifications:
+  email: false
+
+mono:
+  - latest
+
+install:
+  - nuget restore Game2048.sln
+  - nuget restore GameTests/GameTests.csproj -SolutionDirectory .
+
+script:
+  - msbuild /p:Configuration=Release Game2048.sln
+  - msbuild /p:Configuration=Release GameTests/GameTests.csproj
+  - mono ./packages/NUnit.ConsoleRunner.3.8.0/tools/nunit3-console.exe ./GameTests/bin/Release/GameTests.dll
