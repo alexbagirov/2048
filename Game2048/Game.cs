@@ -13,7 +13,6 @@ namespace Game2048
         public Game(int width, int height)
         {
             Map = new GameMap(width, height);
-            Score = 0;
             
             FillMovePresets();
             AddNewTile();
