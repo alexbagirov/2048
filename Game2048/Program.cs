@@ -7,7 +7,7 @@ namespace Game2048
     {
         public static void Main()
         {
-            var game = new Game(4, 4);
+            var game = new Game(2, 2);
             while (true)
             {
                 game.Print();

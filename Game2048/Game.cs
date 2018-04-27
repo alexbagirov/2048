@@ -8,7 +8,6 @@ namespace Game2048
     public class Game
     {
         public readonly GameMap Map;
-        public bool Moved;
         
         public Game(int width, int height)
         {

@@ -8,7 +8,7 @@
         Right
     }
 
-    public class DirectionParser
+    public static class DirectionParser
     {
         public static Direction? Parse(string s)
         {
