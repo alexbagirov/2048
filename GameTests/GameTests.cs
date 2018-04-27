@@ -58,7 +58,7 @@ namespace GameTests
         public void TestGameEnded()
         {
             var game = TryMoveTests.BuildGameMap(new[,]
-           {
+            {
                 {8,64,0}
             });
             game.TryMove(Direction.Right);
@@ -66,7 +66,7 @@ namespace GameTests
             Assert.IsTrue(game.HasEnded());
 
             game = TryMoveTests.BuildGameMap(new[,]
-           {
+            {
                 {2,4,8},
                 {8,64,32},
                 {8,32,16}
@@ -76,7 +76,7 @@ namespace GameTests
             Assert.IsTrue(game.HasEnded());
 
             game = TryMoveTests.BuildGameMap(new[,]
-           {
+            {
                 {2,4,8},
                 {8,64,32},
                 {8,32,16}
@@ -84,7 +84,7 @@ namespace GameTests
             Assert.IsFalse(game.HasEnded());
 
             game = TryMoveTests.BuildGameMap(new[,]
-          {
+            {
                 {8,32,0},
                 {2,64,32},
                 {2,32,16}
