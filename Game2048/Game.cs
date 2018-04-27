@@ -8,10 +8,12 @@ namespace Game2048
     public class Game
     {
         public readonly GameMap Map;
+        public int Score { get; private set; }
         
         public Game(int width, int height)
         {
             Map = new GameMap(width, height);
+            
             FillMovePresets();
             AddNewTile();
             AddNewTile();
@@ -63,6 +65,7 @@ namespace Game2048
                                 Map.MoveTile(curPos, nextPos);
                                 curPos = nextPos;
                                 mergedTiles.Add(Map[curPos]);
+                                Score += Map[curPos].Value;
                                 moved = true;
                             }
                             break;

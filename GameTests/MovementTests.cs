@@ -26,6 +26,7 @@ namespace MovementTests
                 {0,0,0,0}
             };
             Assert.IsTrue(ValuesAreEqual(game, result));
+            Assert.AreEqual(game.Score, 4);
         }
 
         [Test]
@@ -47,6 +48,7 @@ namespace MovementTests
                 {0,4,0,2}
             };
             Assert.IsTrue(ValuesAreEqual(game, result));
+            Assert.AreEqual(game.Score, 4);
         }
 
         [Test]
@@ -68,6 +70,7 @@ namespace MovementTests
                 {2,0,0,0}
             };
             Assert.IsTrue(ValuesAreEqual(game, result));
+            Assert.AreEqual(game.Score, 4);
         }
 
         [Test]
@@ -89,6 +92,7 @@ namespace MovementTests
                 {0,0,0,2}
             };
             Assert.IsTrue(ValuesAreEqual(game, result));
+            Assert.AreEqual(game.Score, 4);
         }
 
         [Test]
@@ -110,6 +114,7 @@ namespace MovementTests
                 {0,0,4,4}
             };
             Assert.IsTrue(ValuesAreEqual(game, result));
+            Assert.AreEqual(game.Score, 4);
         }
 
         [Test]
@@ -126,6 +131,7 @@ namespace MovementTests
             Assert.IsFalse(game.TryMove(Direction.Left));
             Assert.IsFalse(game.TryMove(Direction.Down));
             Assert.IsTrue(game.TryMove(Direction.Up));
+            Assert.AreEqual(game.Score, 0);
         }
 
         [Test]
@@ -147,6 +153,7 @@ namespace MovementTests
                 {8,8,64,256}
             };
             Assert.IsTrue(ValuesAreEqual(game, result));
+            Assert.AreEqual(game.Score, 492);
         }
 
         [Test]
@@ -174,6 +181,7 @@ namespace MovementTests
                 {128,0,0,0},
             };
             Assert.IsTrue(ValuesAreEqual(game, result));
+            Assert.AreEqual(game.Score, 252);
         }
 
         public static Game BuildGameMap(int[,] mapToBuild)
