@@ -1,16 +1,16 @@
 ﻿using System.Drawing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Game2048;
 
 namespace TryMoveTests
 {
-    [TestClass]
+    [TestFixture]
     public class TryMoveTests
     {
-        [TestMethod]
+        [Test]
         public void TestMoveUp()
         {
-            var game = BuildGameMap(new int[,]
+            var game = BuildGameMap(new[,]
             {
                 {0,0,0,0},
                 {0,2,0,2},
@@ -18,7 +18,7 @@ namespace TryMoveTests
                 {0,0,0,0}
             });
             game.TryMove(Direction.Up);
-            var result = new int[,]
+            var result = new[,]
             {
                 {0,4,0,2},
                 {0,0,0,0},
@@ -28,10 +28,10 @@ namespace TryMoveTests
             Assert.IsTrue(ValuesAreEqual(game, result));
         }
 
-        [TestMethod]
+        [Test]
         public void TestMoveDown()
         {
-            var game = BuildGameMap(new int[,]
+            var game = BuildGameMap(new[,]
             {
                 {0,0,0,0},
                 {0,2,0,2},
@@ -39,7 +39,7 @@ namespace TryMoveTests
                 {0,0,0,0}
             });
             game.TryMove(Direction.Down);
-            var result = new int[,]
+            var result = new[,]
             {
                 {0,0,0,0},
                 {0,0,0,0},
@@ -49,10 +49,10 @@ namespace TryMoveTests
             Assert.IsTrue(ValuesAreEqual(game, result));
         }
 
-        [TestMethod]
+        [Test]
         public void TestMoveLeft()
         {
-            var game = BuildGameMap(new int[,]
+            var game = BuildGameMap(new[,]
             {
                 {0,0,0,0},
                 {0,2,2,0},
@@ -60,7 +60,7 @@ namespace TryMoveTests
                 {0,0,0,2}
             });
             game.TryMove(Direction.Left);
-            var result = new int[,]
+            var result = new[,]
             {
                 {0,0,0,0},
                 {4,0,0,0},
@@ -70,10 +70,10 @@ namespace TryMoveTests
             Assert.IsTrue(ValuesAreEqual(game, result));
         }
 
-        [TestMethod]
+        [Test]
         public void TestMoveRight()
         {
-            var game = BuildGameMap(new int[,]
+            var game = BuildGameMap(new[,]
             {
                 {0,0,0,0},
                 {0,2,2,0},
@@ -81,7 +81,7 @@ namespace TryMoveTests
                 {2,0,0,0}
             });
             game.TryMove(Direction.Right);
-            var result = new int[,]
+            var result = new[,]
             {
                 {0,0,0,0},
                 {0,0,0,4},
@@ -91,10 +91,10 @@ namespace TryMoveTests
             Assert.IsTrue(ValuesAreEqual(game, result));
         }
 
-        [TestMethod]
+        [Test]
         public void TestOneTileMergeOnlyOnce()
         {
-            var game = BuildGameMap(new int[,]
+            var game = BuildGameMap(new[,]
             {
                 {0,0,0,0},
                 {0,0,0,0},
@@ -102,7 +102,7 @@ namespace TryMoveTests
                 {4,0,2,2}
             });
             game.TryMove(Direction.Right);
-            var result = new int[,]
+            var result = new[,]
             {
                 {0,0,0,0},
                 {0,0,0,0},
@@ -112,10 +112,10 @@ namespace TryMoveTests
             Assert.IsTrue(ValuesAreEqual(game, result));
         }
 
-        [TestMethod]
+        [Test]
         public void TestTilesDidntMove()
         {
-            var game = BuildGameMap(new int[,]
+            var game = BuildGameMap(new[,]
             {
                 {0,0,0,0},
                 {0,0,0,0},
@@ -128,10 +128,10 @@ namespace TryMoveTests
             Assert.IsTrue(game.TryMove(Direction.Up));
         }
 
-        [TestMethod]
+        [Test]
         public void TestMassiveTileMerges()
         {
-            var game = BuildGameMap(new int[,]
+            var game = BuildGameMap(new[,]
             {
                 {2,0,64,128},
                 {2,16,64,0},
@@ -139,7 +139,7 @@ namespace TryMoveTests
                 {4,8,32,128}
             });
             game.TryMove(Direction.Down);
-            var result = new int[,]
+            var result = new[,]
             {
                 {0,0,0,0},
                 {0,0,0,0},
@@ -149,10 +149,10 @@ namespace TryMoveTests
             Assert.IsTrue(ValuesAreEqual(game, result));
         }
 
-        [TestMethod]
+        [Test]
         public void TestSeveraMoves()
         {
-            var game = BuildGameMap(new int[,]
+            var game = BuildGameMap(new[,]
             {
                 {2,64,0,0},
                 {2,32,0,0},
@@ -166,7 +166,7 @@ namespace TryMoveTests
             game.TryMove(Direction.Up);
             game.TryMove(Direction.Left);
             game.TryMove(Direction.Down);
-            var result = new int[,]
+            var result = new[,]
             {
                 {0,0,0,0},
                 {0,0,0,0},
