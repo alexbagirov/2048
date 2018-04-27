@@ -7,12 +7,12 @@ namespace Game2048
 {
     public class Game
     {
-        private readonly GameMap map;
+        public readonly GameMap Map;
         public bool Moved;
         
         public Game(int width, int height)
         {
-            map = new GameMap(width, height);
+            Map = new GameMap(width, height);
             FillMovePresets();
             AddNewTile();
             AddNewTile();
@@ -24,13 +24,13 @@ namespace Game2048
         private void FillMovePresets()
         {
             presets[Direction.Up] = new MovementPresets(new Point(0, -1), 
-                Enumerable.Range(0, map.Width), Enumerable.Range(0, map.Height));
+                Enumerable.Range(0, Map.Width), Enumerable.Range(0, Map.Height));
             presets[Direction.Left] = new MovementPresets(new Point(-1, 0), 
-                Enumerable.Range(0, map.Width), Enumerable.Range(0, map.Height));
+                Enumerable.Range(0, Map.Width), Enumerable.Range(0, Map.Height));
             presets[Direction.Down] = new MovementPresets(new Point(0, 1), 
-                Enumerable.Range(0, map.Width), Enumerable.Range(0, map.Height).Reverse());
+                Enumerable.Range(0, Map.Width), Enumerable.Range(0, Map.Height).Reverse());
             presets[Direction.Right] = new MovementPresets(new Point(1, 0), 
-                Enumerable.Range(0, map.Width).Reverse(), Enumerable.Range(0, map.Height));
+                Enumerable.Range(0, Map.Width).Reverse(), Enumerable.Range(0, Map.Height));
         }
 
         public bool TryMove(Direction direction)
@@ -47,29 +47,29 @@ namespace Game2048
             {
                 foreach (var x in xRange)
                 {
-                    if (map[x, y].Value == 0) 
+                    if (Map[x, y].Value == 0) 
                         continue;
                     
                     var curPos = new Point(x, y);
                     while (true)
                     {
                         var nextPos = new Point(curPos.X + presets.Vector.X, curPos.Y + presets.Vector.Y);
-                        if (!map.InBounds(nextPos))
+                        if (!Map.InBounds(nextPos))
                             break;
                         
-                        if (map[nextPos].Value != 0)
+                        if (Map[nextPos].Value != 0)
                         {
-                            if (map[nextPos].Value == map[curPos].Value && !mergedTiles.Contains(map[nextPos]))
+                            if (Map[nextPos].Value == Map[curPos].Value && !mergedTiles.Contains(Map[nextPos]))
                             {
-                                map.MoveTile(curPos, nextPos);
+                                Map.MoveTile(curPos, nextPos);
                                 curPos = nextPos;
-                                mergedTiles.Add(map[curPos]);
+                                mergedTiles.Add(Map[curPos]);
                                 moved = true;
                             }
                             break;
                         }
                         
-                        map.MoveTile(curPos, nextPos);
+                        Map.MoveTile(curPos, nextPos);
                         curPos = nextPos;
                         moved = true;
                     }
@@ -80,10 +80,10 @@ namespace Game2048
 
         public void Print()
         {
-            for (var y = 0; y < map.Height; y++)
+            for (var y = 0; y < Map.Height; y++)
             {
-                for (var x = 0; x < map.Width; x++)
-                    Console.Write(map[x, y].Value.ToString().PadRight(4));
+                for (var x = 0; x < Map.Width; x++)
+                    Console.Write(Map[x, y].Value.ToString().PadRight(4));
                 Console.WriteLine();
                 Console.WriteLine();
             }
@@ -92,16 +92,16 @@ namespace Game2048
         public void AddNewTile()
         {
             var random = new Random();
-            map.AddTile(map.GetEmptyTilePosition(), random.NextDouble() < 0.9 ? 2 : 4);
+            Map.AddTile(Map.GetEmptyTilePosition(), random.NextDouble() < 0.9 ? 2 : 4);
         }
 
         public bool HasEnded()
         {
-            for (var i = 0; i < map.Width; i++)
+            for (var i = 0; i < Map.Width; i++)
             {
-                for (var j = 0; j < map.Height; j++)
+                for (var j = 0; j < Map.Height; j++)
                 {
-                    if (TileHasEqualNeighbours(i, j) || map[i, j].Value == 0)
+                    if (TileHasEqualNeighbours(i, j) || Map[i, j].Value == 0)
                         return false;
                 }
             }
@@ -118,10 +118,10 @@ namespace Game2048
                 for (var dy = -1; dy <= 1; dy++)
                 {
                     var neighbour = new Point(point.X + dx, point.Y + dy);
-                    if (!map.InBounds(neighbour) || neighbour == point || dx != 0 && dy != 0)
+                    if (!Map.InBounds(neighbour) || neighbour == point || dx != 0 && dy != 0)
                         continue;
 
-                    if (map[neighbour].Value == map[point].Value)
+                    if (Map[neighbour].Value == Map[point].Value)
                         return true;
                 }
             }

@@ -23,7 +23,7 @@ namespace Game2048
                         break;
                 }
 
-                game.NewTile();
+                game.AddNewTile();
                 
                 if (game.HasEnded())
                 {
