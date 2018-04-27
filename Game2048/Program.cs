@@ -22,7 +22,7 @@ namespace Game2048
                     if (moved)
                         break;
                 }
-                game.NewTile();
+                game.AddNewTile();
                 Console.Clear();
                 Console.SetCursorPosition(0, 0);
             }

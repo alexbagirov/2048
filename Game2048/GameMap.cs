@@ -11,6 +11,8 @@ namespace Game2048
         
         public GameMap(int width, int height)
         {
+            if (width <= 0 || height <= 0 || width * height < 2)
+                throw new ArgumentException("Wrong map parameters");
             gameMap = new Tile[width, height];
             Width = width;
             Height = height;

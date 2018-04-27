@@ -14,8 +14,8 @@ namespace Game2048
         {
             Map = new GameMap(width, height);
             FillMovePresets();
-            NewTile();
-            NewTile();
+            AddNewTile();
+            AddNewTile();
         }
 
         public Dictionary<Direction, MovementPresets> Presets = new Dictionary<Direction, MovementPresets>();
@@ -86,7 +86,7 @@ namespace Game2048
             }
         }
 
-        public void NewTile()
+        public void AddNewTile()
         {
             var random = new Random();
             Map.AddTile(Map.GetEmptyTilePosition(), random.NextDouble() < 0.9 ? 2 : 4);

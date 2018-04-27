@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using Game2048;
 
-namespace TryMoveTests
+namespace MovementTests
 {
     [TestFixture]
     public class TryMoveTests
@@ -176,10 +176,10 @@ namespace TryMoveTests
             Assert.IsTrue(ValuesAreEqual(game, result));
         }
 
-        public Game BuildGameMap(int[,] mapToBuild)
+        public static Game BuildGameMap(int[,] mapToBuild)
         {
-            var width = mapToBuild.GetLength(0);
-            var height = mapToBuild.GetLength(1);
+            var width = mapToBuild.GetLength(1);
+            var height = mapToBuild.GetLength(0);
             var game = new Game(width, height);
             for (var y = 0; y < height; y++)
                 for (var x = 0; x < width; x++)
@@ -187,7 +187,7 @@ namespace TryMoveTests
             return game;
         }
 
-        public bool ValuesAreEqual(Game game, int[,] result)
+        public static bool ValuesAreEqual(Game game, int[,] result)
         {
             for (var y = 0; y < game.Map.Height; y++)
                 for (var x = 0; x < game.Map.Width; x++)
