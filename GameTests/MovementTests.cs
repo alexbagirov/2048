@@ -184,6 +184,23 @@ namespace MovementTests
             Assert.AreEqual(252, game.Score);
         }
 
+        [Test]
+        public void TestEmptyTiles()
+        {
+            var game = BuildGameMap(new[,]
+            {
+                {2, 0, 4},
+                {2, 0, 4}
+            });
+            Assert.True(game.Map.EmptyPositions.Contains(new Point(1, 0)));
+            Assert.True(game.Map.EmptyPositions.Contains(new Point(1, 1)));
+            game.TryMove(Direction.Down);
+            Assert.True(game.Map.EmptyPositions.Contains(new Point(1, 0)));
+            Assert.True(game.Map.EmptyPositions.Contains(new Point(1, 1)));
+            Assert.True(game.Map.EmptyPositions.Contains(new Point(0, 0)));
+            Assert.True(game.Map.EmptyPositions.Contains(new Point(2, 0)));
+        }
+
         public static Game BuildGameMap(int[,] mapToBuild)
         {
             var width = mapToBuild.GetLength(1);

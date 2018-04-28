@@ -36,7 +36,10 @@ namespace Game2048
         public void AddTile(Point point, int value)
         {
             this[point].ChangeValue(value);
-            EmptyPositions.Remove(point);
+            if (value!=0 && EmptyPositions.Contains(point))
+                EmptyPositions.Remove(point);
+            if (value==0)
+                EmptyPositions.Add(point);
         }
 
         public void MoveTile(Point from, Point to)
