@@ -40,8 +40,8 @@ namespace Game2048
             while (true)
             {
                 var nextPos = new Point(curPos.X + vector.X, curPos.Y + vector.Y);
-                if ((!Map.InBounds(nextPos) || Map[nextPos].Value != 0) && 
-                    (Map[nextPos].Value != Map[curPos].Value || mergedTiles.Contains(Map[nextPos])))
+                if (!Map.InBounds(nextPos) || (Map[nextPos].Value != 0 && 
+                    (Map[nextPos].Value != Map[curPos].Value || mergedTiles.Contains(Map[nextPos]))))
                     break;
                 var curValue = Map[curPos].Value;
                 var nextValue = Map[nextPos].Value;
