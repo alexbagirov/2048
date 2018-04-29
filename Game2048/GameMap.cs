@@ -11,8 +11,8 @@ namespace Game2048
         private readonly Tile[,] gameMap;
         public readonly int Width;
         public readonly int Height;
-        public HashSet<Point> emptyPositions = new HashSet<Point>();
-        
+        public HashSet<Point> EmptyPositions { get; private set; } = new HashSet<Point>();
+
         public GameMap(int width, int height)
         {
             if (width <= 0 || height <= 0 || width * height < 2)
@@ -25,7 +25,7 @@ namespace Game2048
                 for (var x = 0; x < Width; x++)
                 {
                     gameMap[x, y] = new Tile();
-                    emptyPositions.Add(new Point(x, y));
+                    EmptyPositions.Add(new Point(x, y));
                 }
         }
 
@@ -36,22 +36,19 @@ namespace Game2048
         public void AddTile(Point point, int value)
         {
             this[point].ChangeValue(value);
-            emptyPositions.Remove(point);
-        }
-
-        public Point GetEmptyTilePosition()
-        {
-            var random = new Random();
-            return emptyPositions.ElementAt(random.Next(emptyPositions.Count));
+            if (value != 0 && EmptyPositions.Contains(point))
+                EmptyPositions.Remove(point);
+            if (value == 0)
+                EmptyPositions.Add(point);
         }
 
         public void MoveTile(Point from, Point to)
         {
             this[to].AddValue(this[from].Value);
             this[from].ChangeValue(0);
-            if (emptyPositions.Contains(to))
-                emptyPositions.Remove(to);
-            emptyPositions.Add(from);
+            if (EmptyPositions.Contains(to))
+                EmptyPositions.Remove(to);
+            EmptyPositions.Add(from);
         }
 
         public bool InBounds(Point point) => 

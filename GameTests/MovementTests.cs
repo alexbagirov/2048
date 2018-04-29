@@ -26,7 +26,7 @@ namespace MovementTests
                 {0,0,0,0}
             };
             Assert.IsTrue(ValuesAreEqual(game, result));
-            Assert.AreEqual(game.Score, 4);
+            Assert.AreEqual(4, game.Score);
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace MovementTests
                 {0,4,0,2}
             };
             Assert.IsTrue(ValuesAreEqual(game, result));
-            Assert.AreEqual(game.Score, 4);
+            Assert.AreEqual(4, game.Score);
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace MovementTests
                 {2,0,0,0}
             };
             Assert.IsTrue(ValuesAreEqual(game, result));
-            Assert.AreEqual(game.Score, 4);
+            Assert.AreEqual(4, game.Score);
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace MovementTests
                 {0,0,0,2}
             };
             Assert.IsTrue(ValuesAreEqual(game, result));
-            Assert.AreEqual(game.Score, 4);
+            Assert.AreEqual(4, game.Score);
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace MovementTests
                 {0,0,4,4}
             };
             Assert.IsTrue(ValuesAreEqual(game, result));
-            Assert.AreEqual(game.Score, 4);
+            Assert.AreEqual(4, game.Score);
         }
 
         [Test]
@@ -131,7 +131,7 @@ namespace MovementTests
             Assert.IsFalse(game.TryMove(Direction.Left));
             Assert.IsFalse(game.TryMove(Direction.Down));
             Assert.IsTrue(game.TryMove(Direction.Up));
-            Assert.AreEqual(game.Score, 0);
+            Assert.AreEqual(0, game.Score);
         }
 
         [Test]
@@ -153,7 +153,7 @@ namespace MovementTests
                 {8,8,64,256}
             };
             Assert.IsTrue(ValuesAreEqual(game, result));
-            Assert.AreEqual(game.Score, 492);
+            Assert.AreEqual(492, game.Score);
         }
 
         [Test]
@@ -181,7 +181,24 @@ namespace MovementTests
                 {128,0,0,0},
             };
             Assert.IsTrue(ValuesAreEqual(game, result));
-            Assert.AreEqual(game.Score, 252);
+            Assert.AreEqual(252, game.Score);
+        }
+
+        [Test]
+        public void TestEmptyTiles()
+        {
+            var game = BuildGameMap(new[,]
+            {
+                {2, 0, 4},
+                {2, 0, 4}
+            });
+            Assert.True(game.Map.EmptyPositions.Contains(new Point(1, 0)));
+            Assert.True(game.Map.EmptyPositions.Contains(new Point(1, 1)));
+            game.TryMove(Direction.Down);
+            Assert.True(game.Map.EmptyPositions.Contains(new Point(1, 0)));
+            Assert.True(game.Map.EmptyPositions.Contains(new Point(1, 1)));
+            Assert.True(game.Map.EmptyPositions.Contains(new Point(0, 0)));
+            Assert.True(game.Map.EmptyPositions.Contains(new Point(2, 0)));
         }
 
         public static Game BuildGameMap(int[,] mapToBuild)

@@ -1,7 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Collections.Generic;
 
 namespace Game2048
 {
@@ -15,8 +15,8 @@ namespace Game2048
             Map = new GameMap(width, height);
             
             FillMovePresets();
-            AddNewTile();
-            AddNewTile();
+            AddRandomTile();
+            AddRandomTile();
         }
 
         private readonly Dictionary<Direction, MovementPresets> presets = 
@@ -34,49 +34,43 @@ namespace Game2048
                 Enumerable.Range(0, Map.Width).Reverse(), Enumerable.Range(0, Map.Height));
         }
 
+        private bool TrySimpleMove(Point curPos, Point vector, HashSet<Tile> mergedTiles)
+        {
+            var moved = false;
+            while (true)
+            {
+                var nextPos = new Point(curPos.X + vector.X, curPos.Y + vector.Y);
+                if (!Map.InBounds(nextPos) || (Map[nextPos].Value != 0 && 
+                    (Map[nextPos].Value != Map[curPos].Value || mergedTiles.Contains(Map[nextPos]))))
+                    break;
+                var curValue = Map[curPos].Value;
+                var nextValue = Map[nextPos].Value;
+                Map.MoveTile(curPos, nextPos);
+                curPos = nextPos;
+                moved = true;
+                if (nextValue == curValue)
+                {
+                    mergedTiles.Add(Map[curPos]);
+                    Score += Map[curPos].Value;
+                    break;
+                }
+            }
+            return moved;
+        }
+
         public bool TryMove(Direction direction)
         {
             var moved = false;
-            
             var presets = this.presets[direction];
-            var xRange = presets.XRange;
-            var yRange = presets.YRange;
-            
             var mergedTiles = new HashSet<Tile>();
-            
-            foreach (var y in yRange)
-            {
-                foreach (var x in xRange)
+            foreach (var y in presets.YRange)
+                foreach (var x in presets.XRange)
                 {
                     if (Map[x, y].Value == 0) 
                         continue;
-                    
                     var curPos = new Point(x, y);
-                    while (true)
-                    {
-                        var nextPos = new Point(curPos.X + presets.Vector.X, curPos.Y + presets.Vector.Y);
-                        if (!Map.InBounds(nextPos))
-                            break;
-                        
-                        if (Map[nextPos].Value != 0)
-                        {
-                            if (Map[nextPos].Value == Map[curPos].Value && !mergedTiles.Contains(Map[nextPos]))
-                            {
-                                Map.MoveTile(curPos, nextPos);
-                                curPos = nextPos;
-                                mergedTiles.Add(Map[curPos]);
-                                Score += Map[curPos].Value;
-                                moved = true;
-                            }
-                            break;
-                        }
-                        
-                        Map.MoveTile(curPos, nextPos);
-                        curPos = nextPos;
-                        moved = true;
-                    }
+                    moved = TrySimpleMove(curPos, presets.Vector, mergedTiles);
                 }
-            }
             return moved;
         }
 
@@ -91,10 +85,11 @@ namespace Game2048
             }
         }
 
-        public void AddNewTile()
+        public void AddRandomTile()
         {
             var random = new Random();
-            Map.AddTile(Map.GetEmptyTilePosition(), random.NextDouble() < 0.9 ? 2 : 4);
+            var point = Map.EmptyPositions.ElementAt(random.Next(Map.EmptyPositions.Count));
+            Map.AddTile(point, random.NextDouble() < 0.9 ? 2 : 4);
         }
 
         public bool HasEnded()

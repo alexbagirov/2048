@@ -30,7 +30,7 @@ namespace GameTests
             var game = new Game(5, 5);
             var nonZeroTiles = 0;
             for (var i = 0; i < 23; i++)
-                game.AddNewTile();
+                game.AddRandomTile();
             for (var y = 0; y < game.Map.Height; y++)
                 for (var x = 0; x < game.Map.Width; x++)
                     if (game.Map[x, y].Value != 0)
@@ -62,7 +62,7 @@ namespace GameTests
                 {8,64,0}
             });
             game.TryMove(Direction.Right);
-            game.AddNewTile();
+            game.AddRandomTile();
             Assert.IsTrue(game.HasEnded());
 
             game = TryMoveTests.BuildGameMap(new[,]
@@ -72,7 +72,7 @@ namespace GameTests
                 {8,32,16}
             });
             game.TryMove(Direction.Up);
-            game.AddNewTile();
+            game.AddRandomTile();
             Assert.IsTrue(game.HasEnded());
 
             game = TryMoveTests.BuildGameMap(new[,]
@@ -90,7 +90,7 @@ namespace GameTests
                 {2,32,16}
             });
             game.TryMove(Direction.Down);
-            game.AddNewTile();
+            game.AddRandomTile();
             Assert.IsFalse(game.HasEnded());
         }
     }
