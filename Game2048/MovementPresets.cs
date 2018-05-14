@@ -6,10 +6,10 @@ namespace Game2048
     public class MovementPresets
     {
         public Point Vector;
-        public IEnumerable<int> XRange;
-        public IEnumerable<int> YRange;
+        public int[] XRange;
+        public int[] YRange;
         
-        public MovementPresets(Point vector, IEnumerable<int> xRange, IEnumerable<int> yRange)
+        public MovementPresets(Point vector, int[] xRange, int[] yRange)
         {
             Vector = vector;
             XRange = xRange;

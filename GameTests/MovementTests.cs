@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using NUnit.Framework;
 using Game2048;
+using System.Collections.Generic;
 
 namespace MovementTests
 {
@@ -27,6 +28,13 @@ namespace MovementTests
             };
             Assert.IsTrue(ValuesAreEqual(game, result));
             Assert.AreEqual(4, game.Score);
+            var expectedTransitions = new List<Transition>
+            {
+                new Transition(new Point(1,1),new Point(1,0), 2),
+                new Transition(new Point(1,2), new Point(1, 0), 2),
+                new Transition(new Point(3,1),new Point(3,0), 2)
+            };
+            Assert.IsTrue(TransitionsAreEqual(game.Transitions, expectedTransitions));
         }
 
         [Test]
@@ -49,6 +57,13 @@ namespace MovementTests
             };
             Assert.IsTrue(ValuesAreEqual(game, result));
             Assert.AreEqual(4, game.Score);
+            var expectedTransitions = new List<Transition>
+            {
+                new Transition(new Point(1,1),new Point(1,3), 2),
+                new Transition(new Point(1,2), new Point(1, 3), 2),
+                new Transition(new Point(3,1),new Point(3,3), 2)
+            };
+            Assert.IsTrue(TransitionsAreEqual(game.Transitions, expectedTransitions));
         }
 
         [Test]
@@ -71,6 +86,13 @@ namespace MovementTests
             };
             Assert.IsTrue(ValuesAreEqual(game, result));
             Assert.AreEqual(4, game.Score);
+            var expectedTransitions = new List<Transition>
+            {
+                new Transition(new Point(1,1),new Point(0,1), 2),
+                new Transition(new Point(2,1), new Point(0,1), 2),
+                new Transition(new Point(3,3),new Point(0,3), 2)
+            };
+            Assert.IsTrue(TransitionsAreEqual(game.Transitions, expectedTransitions));
         }
 
         [Test]
@@ -93,6 +115,13 @@ namespace MovementTests
             };
             Assert.IsTrue(ValuesAreEqual(game, result));
             Assert.AreEqual(4, game.Score);
+            var expectedTransitions = new List<Transition>
+            {
+                new Transition(new Point(1,1),new Point(3,1), 2),
+                new Transition(new Point(2,1), new Point(3,1), 2),
+                new Transition(new Point(0,3),new Point(3,3), 2)
+            };
+            Assert.IsTrue(TransitionsAreEqual(game.Transitions, expectedTransitions));
         }
 
         [Test]
@@ -192,13 +221,85 @@ namespace MovementTests
                 {2, 0, 4},
                 {2, 0, 4}
             });
-            Assert.True(game.Map.EmptyPositions.Contains(new Point(1, 0)));
-            Assert.True(game.Map.EmptyPositions.Contains(new Point(1, 1)));
+            Assert.True(game.IsEmpty(new Point(1, 0)));
+            Assert.True(game.IsEmpty(new Point(1, 1)));
             game.TryMove(Direction.Down);
-            Assert.True(game.Map.EmptyPositions.Contains(new Point(1, 0)));
-            Assert.True(game.Map.EmptyPositions.Contains(new Point(1, 1)));
-            Assert.True(game.Map.EmptyPositions.Contains(new Point(0, 0)));
-            Assert.True(game.Map.EmptyPositions.Contains(new Point(2, 0)));
+            Assert.True(game.IsEmpty(new Point(1, 0)));
+            Assert.True(game.IsEmpty(new Point(1, 1)));
+            Assert.True(game.IsEmpty(new Point(0, 0)));
+            Assert.True(game.IsEmpty(new Point(2, 0)));
+        }
+
+        [Test]
+        public void TestMoveBackAfterDown()
+        {
+            var gameMap = new[,]
+            {
+                {2,0,64,128},
+                {2,16,64,0},
+                {4,16,32,0},
+                {4,8,32,128}
+            };
+
+            var game = BuildGameMap(gameMap);
+            game.TryMove(Direction.Down);
+            game.MoveBack();
+            Assert.IsTrue(ValuesAreEqual(game, gameMap));
+            Assert.AreEqual(0, game.Score);
+        }
+
+        [Test]
+        public void TestMoveBackAfteUp()
+        {
+            var gameMap = new[,]
+            {
+                {2,0,64,128},
+                {2,16,64,0},
+                {4,16,32,0},
+                {4,8,32,128}
+            };
+
+            var game = BuildGameMap(gameMap);
+            game.TryMove(Direction.Up);
+            game.MoveBack();
+            Assert.IsTrue(ValuesAreEqual(game, gameMap));
+            Assert.AreEqual(0, game.Score);
+        }
+
+        [Test]
+        public void TestMoveBackAfterRight()
+        {
+            var gameMap = new[,]
+            {
+                {4,4,2,2},
+                {8,16,16,0},
+                {32,32,64,64},
+                {128,0,0,128}
+            };
+
+            var game = BuildGameMap(gameMap);
+            game.TryMove(Direction.Right);
+            game.MoveBack();
+            Assert.IsTrue(ValuesAreEqual(game, gameMap));
+            Assert.AreEqual(0, game.Score);
+        }
+
+        [Test]
+        public void TestMoveBackAfterLeft()
+        {
+            var gameMap = new[,]
+            {
+                {4,4,2,2},
+                {8,16,16,0},
+                {32,32,64,64},
+                {128,0,0,128}
+            };
+
+            var game = BuildGameMap(gameMap);
+            game.TryMove(Direction.Left);
+            game.MoveBack();
+            Assert.IsTrue(ValuesAreEqual(game, gameMap));
+            Assert.AreEqual(0, game.Score);
         }
 
         public static Game BuildGameMap(int[,] mapToBuild)
@@ -208,16 +309,29 @@ namespace MovementTests
             var game = new Game(width, height);
             for (var y = 0; y < height; y++)
                 for (var x = 0; x < width; x++)
-                    game.Map.AddTile(new Point(x, y), mapToBuild[y,x]);
+                    game.AddTile(new Point(x, y), mapToBuild[y, x]);
             return game;
         }
 
         public static bool ValuesAreEqual(Game game, int[,] result)
         {
-            for (var y = 0; y < game.Map.Height; y++)
-                for (var x = 0; x < game.Map.Width; x++)
-                    if (game.Map[x, y].Value != result[y, x])
+            for (var y = 0; y < game.Height; y++)
+                for (var x = 0; x < game.Width; x++)
+                    if (game[x, y].Value != result[y, x])
                         return false;
+            return true;
+        }
+
+        public static bool TransitionsAreEqual(List<Transition> list1,
+            List<Transition> list2)
+        {
+            if (list1.Count != list2.Count)
+                return false;
+            foreach (var element in list1)
+            {
+                if (!list2.Contains(element))
+                    return false;
+            }
             return true;
         }
     }

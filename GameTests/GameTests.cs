@@ -13,11 +13,11 @@ namespace GameTests
         {
             var game = new Game(4, 4);
             var nonZeroTiles = 0;
-            for (var y = 0; y < game.Map.Height; y++)
-                for (var x = 0; x < game.Map.Width; x++)
-                    if (game.Map[x, y].Value != 0)
+            for (var y = 0; y < game.Height; y++)
+                for (var x = 0; x < game.Width; x++)
+                    if (game[x, y].Value != 0)
                     {
-                        var value = game.Map[x, y].Value;
+                        var value = game[x, y].Value;
                         nonZeroTiles++;
                         Assert.IsTrue(value == 2 || value == 4);
                     }
@@ -31,11 +31,11 @@ namespace GameTests
             var nonZeroTiles = 0;
             for (var i = 0; i < 23; i++)
                 game.AddRandomTile();
-            for (var y = 0; y < game.Map.Height; y++)
-                for (var x = 0; x < game.Map.Width; x++)
-                    if (game.Map[x, y].Value != 0)
+            for (var y = 0; y < game.Height; y++)
+                for (var x = 0; x < game.Width; x++)
+                    if (game[x, y].Value != 0)
                     {
-                        var value = game.Map[x, y].Value;
+                        var value = game[x, y].Value;
                         nonZeroTiles++;
                         Assert.IsTrue(value == 2 || value == 4);
                     }
@@ -45,27 +45,44 @@ namespace GameTests
         [Test]
         public void TestDifferentMapParameters()
         {
-            Assert.Throws<ArgumentException>(() => new GameMap(-5, -2));
-            Assert.Throws<ArgumentException>(() => new GameMap(1, 1));
-            Assert.Throws<ArgumentException>(() => new GameMap(-4, 4));
-            Assert.Throws<ArgumentException>(() => new GameMap(0, 100));
-            var map = new GameMap(10, 10);
-            Assert.AreEqual(10, map.Width);
-            Assert.AreEqual(10, map.Height);
+            Assert.Throws<ArgumentException>(() => new Game(-5, -2));
+            Assert.Throws<ArgumentException>(() => new Game(1, 1));
+            Assert.Throws<ArgumentException>(() => new Game(-4, 4));
+            Assert.Throws<ArgumentException>(() => new Game(0, 100));
+            var game = new Game(10, 10);
+            Assert.AreEqual(10, game.Width);
+            Assert.AreEqual(10, game.Height);
+        }
+    }
+
+    [TestFixture]
+    public class EndTests
+    {
+        [Test]
+        public void TestSimpleGameEnd()
+        {
+            var game = TryMoveTests.BuildGameMap(new[,]
+            {
+                {8,64,2}
+            });
+            Assert.IsTrue(game.HasEnded());
+           
         }
 
         [Test]
-        public void TestGameEnded()
+        public void TestGameNotEnd()
         {
             var game = TryMoveTests.BuildGameMap(new[,]
             {
                 {8,64,0}
             });
-            game.TryMove(Direction.Right);
-            game.AddRandomTile();
-            Assert.IsTrue(game.HasEnded());
+            Assert.IsFalse(game.HasEnded());
+        }
 
-            game = TryMoveTests.BuildGameMap(new[,]
+        [Test]
+        public void TestGameEndedAfterMove()
+        {
+            var game = TryMoveTests.BuildGameMap(new[,]
             {
                 {2,4,8},
                 {8,64,32},
@@ -74,16 +91,24 @@ namespace GameTests
             game.TryMove(Direction.Up);
             game.AddRandomTile();
             Assert.IsTrue(game.HasEnded());
+        }
 
-            game = TryMoveTests.BuildGameMap(new[,]
+        [Test]
+        public void TestGameNotEndedWhenMovesAvailable()
+        {
+            var game = TryMoveTests.BuildGameMap(new[,]
             {
                 {2,4,8},
                 {8,64,32},
                 {8,32,16}
             });
             Assert.IsFalse(game.HasEnded());
+        }
 
-            game = TryMoveTests.BuildGameMap(new[,]
+        [Test]
+        public void TestGameNotEndedWhenNewEmptyTiles()
+        {
+            var game = TryMoveTests.BuildGameMap(new[,]
             {
                 {8,32,0},
                 {2,64,32},
