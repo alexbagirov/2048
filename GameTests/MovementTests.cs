@@ -30,9 +30,9 @@ namespace MovementTests
             Assert.AreEqual(4, game.Score);
             var expectedTransitions = new List<Transition>
             {
-                new Transition(new Point(1,1),new Point(1,0), 2),
-                new Transition(new Point(1,2), new Point(1, 0), 2),
-                new Transition(new Point(3,1),new Point(3,0), 2)
+                new Transition(new Point(1,1),new Point(1,0), 2, false),
+                new Transition(new Point(1,2), new Point(1, 0), 2, true),
+                new Transition(new Point(3,1),new Point(3,0), 2, false)
             };
             Assert.IsTrue(TransitionsAreEqual(game.Transitions, expectedTransitions));
         }
@@ -59,9 +59,9 @@ namespace MovementTests
             Assert.AreEqual(4, game.Score);
             var expectedTransitions = new List<Transition>
             {
-                new Transition(new Point(1,1),new Point(1,3), 2),
-                new Transition(new Point(1,2), new Point(1, 3), 2),
-                new Transition(new Point(3,1),new Point(3,3), 2)
+                new Transition(new Point(1,1),new Point(1,3), 2, false),
+                new Transition(new Point(1,2), new Point(1, 3), 2, true),
+                new Transition(new Point(3,1),new Point(3,3), 2, false)
             };
             Assert.IsTrue(TransitionsAreEqual(game.Transitions, expectedTransitions));
         }
@@ -88,9 +88,9 @@ namespace MovementTests
             Assert.AreEqual(4, game.Score);
             var expectedTransitions = new List<Transition>
             {
-                new Transition(new Point(1,1),new Point(0,1), 2),
-                new Transition(new Point(2,1), new Point(0,1), 2),
-                new Transition(new Point(3,3),new Point(0,3), 2)
+                new Transition(new Point(1,1),new Point(0,1), 2, false),
+                new Transition(new Point(2,1), new Point(0,1), 2, true),
+                new Transition(new Point(3,3),new Point(0,3), 2, false)
             };
             Assert.IsTrue(TransitionsAreEqual(game.Transitions, expectedTransitions));
         }
@@ -117,9 +117,9 @@ namespace MovementTests
             Assert.AreEqual(4, game.Score);
             var expectedTransitions = new List<Transition>
             {
-                new Transition(new Point(1,1),new Point(3,1), 2),
-                new Transition(new Point(2,1), new Point(3,1), 2),
-                new Transition(new Point(0,3),new Point(3,3), 2)
+                new Transition(new Point(1,1),new Point(3,1), 2, false),
+                new Transition(new Point(2,1), new Point(3,1), 2, true),
+                new Transition(new Point(0,3),new Point(3,3), 2, false)
             };
             Assert.IsTrue(TransitionsAreEqual(game.Transitions, expectedTransitions));
         }
@@ -243,7 +243,7 @@ namespace MovementTests
 
             var game = BuildGameMap(gameMap);
             game.TryMove(Direction.Down);
-            game.MoveBack();
+            game.Undo();
             Assert.IsTrue(ValuesAreEqual(game, gameMap));
             Assert.AreEqual(0, game.Score);
         }
@@ -261,7 +261,7 @@ namespace MovementTests
 
             var game = BuildGameMap(gameMap);
             game.TryMove(Direction.Up);
-            game.MoveBack();
+            game.Undo();
             Assert.IsTrue(ValuesAreEqual(game, gameMap));
             Assert.AreEqual(0, game.Score);
         }
@@ -279,7 +279,7 @@ namespace MovementTests
 
             var game = BuildGameMap(gameMap);
             game.TryMove(Direction.Right);
-            game.MoveBack();
+            game.Undo();
             Assert.IsTrue(ValuesAreEqual(game, gameMap));
             Assert.AreEqual(0, game.Score);
         }
@@ -297,7 +297,7 @@ namespace MovementTests
 
             var game = BuildGameMap(gameMap);
             game.TryMove(Direction.Left);
-            game.MoveBack();
+            game.Undo();
             Assert.IsTrue(ValuesAreEqual(game, gameMap));
             Assert.AreEqual(0, game.Score);
         }

@@ -36,7 +36,7 @@ namespace Game2048
             AddRandomTile();
         }
 
-        private readonly Dictionary<Direction, MovementPresets> presets =
+        private readonly Dictionary<Direction, MovementPresets> preset =
             new Dictionary<Direction, MovementPresets>();
 
         public Tile this[int x, int y] => map[x, y];
@@ -87,19 +87,20 @@ namespace Game2048
 
         private void FillMovePresets()
         {
-            presets[Direction.Up] = new MovementPresets(new Point(0, -1), 
+            preset[Direction.Up] = new MovementPresets(new Point(0, -1), 
                 Enumerable.Range(0, Width).ToArray(), Enumerable.Range(0, Height).ToArray());
-            presets[Direction.Left] = new MovementPresets(new Point(-1, 0), 
+            preset[Direction.Left] = new MovementPresets(new Point(-1, 0), 
                 Enumerable.Range(0, Width).ToArray(), Enumerable.Range(0, Height).ToArray());
-            presets[Direction.Down] = new MovementPresets(new Point(0, 1), 
+            preset[Direction.Down] = new MovementPresets(new Point(0, 1), 
                 Enumerable.Range(0, Width).ToArray(), Enumerable.Range(0, Height).Reverse().ToArray());
-            presets[Direction.Right] = new MovementPresets(new Point(1, 0), 
+            preset[Direction.Right] = new MovementPresets(new Point(1, 0), 
                 Enumerable.Range(0, Width).Reverse().ToArray(), Enumerable.Range(0, Height).ToArray());
         }
 
         private bool TrySimpleMove(Point curPos, Point vector, 
             HashSet<Tile> mergedTiles, List<Transition> transitions)
         {
+            var merged = false;
             var startPos = curPos;
             var startValue = this[startPos].Value;
             var moved = false;
@@ -118,11 +119,12 @@ namespace Game2048
                 {
                     mergedTiles.Add(this[curPos]);
                     Score += this[curPos].Value;
+                    merged = true;
                     break;
                 }
             }
             if (moved)
-                transitions.Add(new Transition(startPos, curPos, startValue));
+                transitions.Add(new Transition(startPos, curPos, startValue, merged));
             return moved;
         }
 
@@ -130,15 +132,15 @@ namespace Game2048
         {
             var transitions = new List<Transition>();
             var moved = false;
-            var presets = this.presets[direction];
+            var preset = this.preset[direction];
             var mergedTiles = new HashSet<Tile>();
-            foreach (var y in presets.YRange)
-                foreach (var x in presets.XRange)
+            foreach (var y in preset.YRange)
+                foreach (var x in preset.XRange)
                 {
                     if (this[x, y].Value == 0) 
                         continue;
                     var curPos = new Point(x, y);
-                    moved = TrySimpleMove(curPos, presets.Vector, mergedTiles, transitions);
+                    moved = TrySimpleMove(curPos, preset.Vector, mergedTiles, transitions);
                 }
             if (moved)
             {
@@ -199,7 +201,7 @@ namespace Game2048
 
             return false;
         }
-        public void MoveBack()
+        public void Undo()
         {
             var changes = new Dictionary<Point, int>();
             var orderedTransitions = Transitions
