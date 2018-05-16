@@ -13,8 +13,8 @@ namespace Game2048
         public readonly int Height;
         private HashSet<Point> emptyPositions = new HashSet<Point>();
         public int Score { get; private set; }
-        public List<Transition> Transitions = new List<Transition>();
-        private Direction lastMove;
+        public Stack<List<Transition>> Transitions = new Stack<List<Transition>>();
+        private Stack<Direction> Moves = new Stack<Direction>();
 
         public Game(int width, int height)
         {
@@ -30,7 +30,7 @@ namespace Game2048
                     map[x, y] = new Tile();
                     emptyPositions.Add(new Point(x, y));
                 }
-
+            Transitions.Push(new List<Transition>());
             FillMovePresets();
             AddRandomTile();
             AddRandomTile();
@@ -84,7 +84,6 @@ namespace Game2048
 
         public bool IsEmpty(Point point) => emptyPositions.Contains(point);
         
-
         private void FillMovePresets()
         {
             preset[Direction.Up] = new MovementPresets(new Point(0, -1), 
@@ -124,14 +123,15 @@ namespace Game2048
                 }
             }
             if (moved)
-                transitions.Add(new Transition(startPos, curPos, startValue, merged));
+                transitions.Add(new Transition(startPos, curPos, startValue, 
+                    merged? Condition.Merged : Condition.Moved));
             return moved;
         }
 
         public bool TryMove(Direction direction)
         {
             var transitions = new List<Transition>();
-            var moved = false;
+            var moveFlag = false;
             var preset = this.preset[direction];
             var mergedTiles = new HashSet<Tile>();
             foreach (var y in preset.YRange)
@@ -140,32 +140,25 @@ namespace Game2048
                     if (this[x, y].Value == 0) 
                         continue;
                     var curPos = new Point(x, y);
-                    moved = TrySimpleMove(curPos, preset.Vector, mergedTiles, transitions);
+                    var moved = TrySimpleMove(curPos, preset.Vector, mergedTiles, transitions);
+                    if (moved)
+                        moveFlag = true;
                 }
-            if (moved)
+            if (moveFlag)
             {
-                Transitions = transitions;
-                lastMove = direction;
+                Transitions.Push(transitions);
+                Moves.Push(direction);
             }
-            return moved;
-        }
-
-        public void Print()
-        {
-            for (var y = 0; y < Height; y++)
-            {
-                for (var x = 0; x < Width; x++)
-                    Console.Write(this[x, y].Value.ToString().PadRight(4));
-                Console.WriteLine();
-                Console.WriteLine();
-            }
+            return moveFlag;
         }
 
         public void AddRandomTile()
         {
             var random = new Random();
             var point = emptyPositions.ElementAt(random.Next(emptyPositions.Count));
-            AddTile(point, random.NextDouble() < 0.9 ? 2 : 4);
+            var value = random.NextDouble() < 0.9 ? 2 : 4;
+            AddTile(point, value);
+            Transitions.Peek().Add(new Transition(new Point(-1, -1), point, value, Condition.Appeared));
         }
 
         public bool HasEnded()
@@ -201,24 +194,29 @@ namespace Game2048
 
             return false;
         }
+
         public void Undo()
         {
-            var changes = new Dictionary<Point, int>();
-            var orderedTransitions = Transitions
-                .OrderBy(t => 
+            if (Moves.Count == 0)
+                return;
+            var lastMove = Moves.Pop();
+            var transitions = Transitions.Pop();
+            foreach (var transition in transitions.Where(t => t.Condition == Condition.Appeared))
+                AddTile(transition.Finish, 0);
+            var orderedTransitions = transitions
+                .Where(t => t.Condition != Condition.Appeared)
+                .OrderBy(t =>
                 {
                     if (lastMove == Direction.Right)
                         return t.Start.X;
-                    else
-                        return -t.Start.X;
+                    return -t.Start.X;
                 })
                 .ThenBy(t =>
                 {
                     if (lastMove == Direction.Down)
                         return t.Start.Y;
-                    else
-                        return -t.Start.Y;
-                 });
+                    return -t.Start.Y;
+                });
             foreach (var transition in orderedTransitions)
             {
                 if (transition.StartValue != this[transition.Finish].Value)
@@ -229,9 +227,8 @@ namespace Game2048
                     AddTile(transition.Start, previousValue);
                 }
                 else
-                    MoveTile(transition.Finish, transition.Start);
+                    MoveTile(transition.Finish, transition.Start);  
             }
-            Transitions.Clear();
         }
     }
 }

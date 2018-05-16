@@ -8,13 +8,13 @@ namespace Game2048
         public readonly Point Start;
         public readonly Point Finish;
         public readonly int StartValue;
-        public readonly bool Merged;
-        public Transition(Point start, Point finish, int startValue, bool merged)
+        public readonly Condition Condition;
+        public Transition(Point start, Point finish, int startValue, Condition condition)
         {
             Start = start;
             Finish = finish;
             StartValue = startValue;
-            Merged = merged;
+            Condition = condition;
         }
 
         public override bool Equals(object obj)
@@ -24,5 +24,11 @@ namespace Game2048
                 && StartValue == transition.StartValue;
         }
     }
-    
+
+    public enum Condition
+    {
+        Merged,
+        Moved,
+        Appeared
+    }
 }

@@ -30,11 +30,11 @@ namespace MovementTests
             Assert.AreEqual(4, game.Score);
             var expectedTransitions = new List<Transition>
             {
-                new Transition(new Point(1,1),new Point(1,0), 2, false),
-                new Transition(new Point(1,2), new Point(1, 0), 2, true),
-                new Transition(new Point(3,1),new Point(3,0), 2, false)
+                new Transition(new Point(1,1),new Point(1,0), 2, Condition.Moved),
+                new Transition(new Point(1,2), new Point(1, 0), 2, Condition.Merged),
+                new Transition(new Point(3,1),new Point(3,0), 2, Condition.Moved)
             };
-            Assert.IsTrue(TransitionsAreEqual(game.Transitions, expectedTransitions));
+            Assert.IsTrue(TransitionsAreEqual(game.Transitions.Pop(), expectedTransitions));
         }
 
         [Test]
@@ -59,11 +59,11 @@ namespace MovementTests
             Assert.AreEqual(4, game.Score);
             var expectedTransitions = new List<Transition>
             {
-                new Transition(new Point(1,1),new Point(1,3), 2, false),
-                new Transition(new Point(1,2), new Point(1, 3), 2, true),
-                new Transition(new Point(3,1),new Point(3,3), 2, false)
+                new Transition(new Point(1,1),new Point(1,3), 2, Condition.Moved),
+                new Transition(new Point(1,2), new Point(1, 3), 2,Condition.Merged),
+                new Transition(new Point(3,1),new Point(3,3), 2, Condition.Moved)
             };
-            Assert.IsTrue(TransitionsAreEqual(game.Transitions, expectedTransitions));
+            Assert.IsTrue(TransitionsAreEqual(game.Transitions.Pop(), expectedTransitions));
         }
 
         [Test]
@@ -88,11 +88,11 @@ namespace MovementTests
             Assert.AreEqual(4, game.Score);
             var expectedTransitions = new List<Transition>
             {
-                new Transition(new Point(1,1),new Point(0,1), 2, false),
-                new Transition(new Point(2,1), new Point(0,1), 2, true),
-                new Transition(new Point(3,3),new Point(0,3), 2, false)
+                new Transition(new Point(1,1),new Point(0,1), 2, Condition.Moved),
+                new Transition(new Point(2,1), new Point(0,1), 2,  Condition.Merged),
+                new Transition(new Point(3,3),new Point(0,3), 2,Condition.Moved)
             };
-            Assert.IsTrue(TransitionsAreEqual(game.Transitions, expectedTransitions));
+            Assert.IsTrue(TransitionsAreEqual(game.Transitions.Pop(), expectedTransitions));
         }
 
         [Test]
@@ -117,11 +117,11 @@ namespace MovementTests
             Assert.AreEqual(4, game.Score);
             var expectedTransitions = new List<Transition>
             {
-                new Transition(new Point(1,1),new Point(3,1), 2, false),
-                new Transition(new Point(2,1), new Point(3,1), 2, true),
-                new Transition(new Point(0,3),new Point(3,3), 2, false)
+                new Transition(new Point(1,1),new Point(3,1), 2, Condition.Moved),
+                new Transition(new Point(2,1), new Point(3,1), 2, Condition.Merged),
+                new Transition(new Point(0,3),new Point(3,3), 2, Condition.Moved)
             };
-            Assert.IsTrue(TransitionsAreEqual(game.Transitions, expectedTransitions));
+            Assert.IsTrue(TransitionsAreEqual(game.Transitions.Pop(), expectedTransitions));
         }
 
         [Test]
@@ -297,6 +297,28 @@ namespace MovementTests
 
             var game = BuildGameMap(gameMap);
             game.TryMove(Direction.Left);
+            game.Undo();
+            Assert.IsTrue(ValuesAreEqual(game, gameMap));
+            Assert.AreEqual(0, game.Score);
+        }
+
+        [Test]
+        public void TestCommonUndo()
+        {
+            var gameMap = new[,]
+            {
+                {8,0,0,2},
+                {4,4,2,2},
+                {2,4,0,4},
+                {8,4,8,8}
+            };
+
+            var game = BuildGameMap(gameMap);
+            game.TryMove(Direction.Right);
+            game.AddRandomTile();
+            game.TryMove(Direction.Down);
+            game.AddRandomTile();
+            game.Undo();
             game.Undo();
             Assert.IsTrue(ValuesAreEqual(game, gameMap));
             Assert.AreEqual(0, game.Score);
