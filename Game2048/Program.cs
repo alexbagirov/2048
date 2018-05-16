@@ -1,5 +1,4 @@
 ﻿using System.Windows.Forms;
-using System;
 
 namespace Game2048
 {
@@ -8,36 +7,8 @@ namespace Game2048
         public static void Main()
         {
             var game = new Game(4, 4);
-            while (true)
-            {
-                game.Print();
-
-                while (true)
-                {
-                    var move = DirectionParser.Parse(Console.ReadLine());
-                    var moved = false;
-                    if (move != null)
-                        moved = game.TryMove((Direction) move);
-
-                    if (moved)
-                        break;
-                }
-
-                game.AddRandomTile();
-                
-                if (game.HasEnded())
-                {
-                    Console.Clear();
-                    Console.WriteLine("GAME ENDED");
-                    game.Print();
-                    break;
-                }
-
-                Console.Clear();
-                Console.SetCursorPosition(0, 0);
-            }
-            /*var form = new GameForm(game);
-            Application.Run(form);*/
+            var form = new GameForm(game);
+            Application.Run(form);
         }
     }
 }

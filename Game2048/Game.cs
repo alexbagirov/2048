@@ -203,22 +203,19 @@ namespace Game2048
         }
         public void Undo()
         {
-            var changes = new Dictionary<Point, int>();
             var orderedTransitions = Transitions
-                .OrderBy(t => 
+                .OrderBy(t =>
                 {
                     if (lastMove == Direction.Right)
                         return t.Start.X;
-                    else
-                        return -t.Start.X;
+                    return -t.Start.X;
                 })
                 .ThenBy(t =>
                 {
                     if (lastMove == Direction.Down)
                         return t.Start.Y;
-                    else
-                        return -t.Start.Y;
-                 });
+                    return -t.Start.Y;
+                });
             foreach (var transition in orderedTransitions)
             {
                 if (transition.StartValue != this[transition.Finish].Value)
