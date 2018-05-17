@@ -70,24 +70,29 @@ namespace Game2048
             KeyPress += (sender, args) =>
             {
                 var key = args.KeyChar;
+                var moved = false;
                 switch (key)
                 {
                     case 'w':
-                        game.TryMove(Direction.Up);
+                        moved = game.TryMove(Direction.Up);
                         break;
                     case 'a':
-                        game.TryMove(Direction.Left);
+                        moved = game.TryMove(Direction.Left);
                         break;
                     case 's':
-                        game.TryMove(Direction.Down);
+                        moved = game.TryMove(Direction.Down);
                         break;
                     case 'd':
-                        game.TryMove(Direction.Right);
+                        moved = game.TryMove(Direction.Right);
+                        break;
+                    case 'q':
+                        game.Undo();
                         break;
                     default:
                         return;
                 }
-                game.AddRandomTile();
+                if (moved)
+                    game.AddRandomTile();
                 for (var k = 0; k < 300; k++)
                 {
                     for(var i = 0; i<game.Height;i++)
