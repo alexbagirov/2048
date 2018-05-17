@@ -1,6 +1,6 @@
 ﻿namespace Game2048
 {
-    partial class GameForm
+    sealed partial class GameForm
     {
         /// <summary>
         /// Required designer variable.
