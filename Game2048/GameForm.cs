@@ -5,8 +5,10 @@ namespace Game2048
 {
     public sealed partial class GameForm : Form
     {
-        public GameForm(Game game)
+        public GameForm()
         {
+            var game = new Game(4, 4);
+            
             Size = Screen.PrimaryScreen.WorkingArea.Size;
             MinimumSize = Size;
             MaximumSize = Size;
@@ -75,11 +77,7 @@ namespace Game2048
             
             table.Controls.Add(head, 1, 0);
 
-            var gameField = new TableLayoutPanel
-            {
-                BackColor = ColorTranslator.FromHtml("#776e65"),
-                Dock = DockStyle.Fill
-            };
+            var gameField = new GameField();
             for (var i = 0; i < game.Height; i++)
                 gameField.RowStyles.Add(new RowStyle(SizeType.Absolute, table.RowStyles[1].Height/ game.Height));
             for (var i = 0; i < game.Width; i++)
@@ -88,54 +86,82 @@ namespace Game2048
             
             Controls.Add(table);
 
+            var panels = StartGame(game, gameField);
+
+            KeyDown += (sender, args) => MakeMove(game, panels, args.KeyData);
+            head.Controls[3].Click += (sender, args) =>
+            {
+                game = new Game(4, 4);
+                gameField = new GameField();
+                StartGame(game, gameField);
+                UpdateColors(game, panels);
+            };
+        }
+
+        private Control[,] StartGame(Game game, TableLayoutPanel field)
+        {
             var panels = new Control[game.Width, game.Height];
+            field.Controls.Clear();
+            
             for (var i = 0; i < game.Height; i++)
             {
                 for (var j = 0; j < game.Width; j++)
                 {
                     panels[j, i] = new Panel {Dock = DockStyle.Fill, BackColor = game[j, i].Color};
-                    gameField.Controls.Add(panels[j, i], j, i);
+                    field.Controls.Add(panels[j, i], j, i);
                 }
             }
+            return panels;
+        }
 
-            KeyPress += (sender, args) =>
+        private void UpdateColors(Game game, Control[,] panels)
+        {
+            for (var i = 0; i < game.Height; i++)
             {
-                var key = args.KeyChar;
-                var moved = false;
-                switch (key)
+                for (var j = 0; j < game.Width; j++)
                 {
-                    case 'w':
-                        moved = game.TryMove(Direction.Up);
-                        break;
-                    case 'a':
-                        moved = game.TryMove(Direction.Left);
-                        break;
-                    case 's':
-                        moved = game.TryMove(Direction.Down);
-                        break;
-                    case 'd':
-                        moved = game.TryMove(Direction.Right);
-                        break;
-                    case 'q':
-                        game.Undo();
-                        break;
-                    default:
-                        return;
+                    panels[j, i].BackColor = game[j, i].Color;
                 }
-                if (moved)
-                    game.AddRandomTile();
-                for (var k = 0; k < 300; k++)
-                {
-                    for (var i = 0; i < game.Height; i++)
-                    {
-                        for (var j = 0; j < game.Width; j++)
-                        {
-                            panels[j, i].BackColor = game[j, i].Color;
-                        }
-                    }
-                    Invalidate();
-                }
-            };
+            }
+            Invalidate();
+        }
+
+        private void MakeMove(Game game, Control[,] panels, Keys key)
+        {
+            var moved = false;
+            switch (key)
+            {
+                case Keys.W: case Keys.Up:
+                    moved = game.TryMove(Direction.Up);
+                    break;
+                case Keys.A: case Keys.Left:
+                    moved = game.TryMove(Direction.Left);
+                    break;
+                case Keys.S: case Keys.Down:
+                    moved = game.TryMove(Direction.Down);
+                    break;
+                case Keys.D: case Keys.Right:
+                    moved = game.TryMove(Direction.Right);
+                    break;
+                case Keys.Q: case Keys.Back:
+                    game.Undo();
+                    break;
+                default:
+                    return;
+            }
+            
+            if (moved)
+                game.AddRandomTile();
+            UpdateColors(game, panels);
+        }
+    }
+
+    public sealed class GameField : TableLayoutPanel
+    {
+        public GameField()
+        {
+            BackColor = ColorTranslator.FromHtml("#776e65");
+            Dock = DockStyle.Fill;
         }
     }
 }
