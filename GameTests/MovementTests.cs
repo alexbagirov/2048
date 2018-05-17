@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Game2048;
 using System.Collections.Generic;
+using System;
 
 namespace MovementTests
 {
@@ -125,6 +126,26 @@ namespace MovementTests
         }
 
         [Test]
+        public void TestMoves()
+        {
+            var game = BuildGameMap(new[,]
+            {
+                {0, 0},
+                {0, 2}
+            });
+            var moves = new List<Direction>
+            {
+                Direction.Up, Direction.Left, Direction.Down,
+                Direction.Right, Direction.Left, Direction.Up
+            };
+            foreach (var direction in moves)
+                game.TryMove(direction);
+            moves.Reverse();
+            foreach (var direction in moves)
+                Assert.AreEqual(direction, game.Moves.Pop());
+        }
+
+        [Test]
         public void TestOneTileMergeOnlyOnce()
         {
             var game = BuildGameMap(new[,]
@@ -231,7 +252,7 @@ namespace MovementTests
         }
 
         [Test]
-        public void TestMoveBackAfterDown()
+        public void TestUndoAfterDown()
         {
             var gameMap = new[,]
             {
@@ -249,7 +270,7 @@ namespace MovementTests
         }
 
         [Test]
-        public void TestMoveBackAfteUp()
+        public void TestUndoAfteUp()
         {
             var gameMap = new[,]
             {
@@ -267,7 +288,31 @@ namespace MovementTests
         }
 
         [Test]
-        public void TestMoveBackAfterRight()
+        public void TestTryMoveWithFilledLine()
+        {
+            var gameMap = new[,]
+           {
+                {0,0,0,0},
+                {0,0,0,4},
+                {0,0,2,8},
+                {4,16,4,2}
+            };
+
+            var game = BuildGameMap(gameMap);
+            Assert.False(game.TryMove(Direction.Right));
+            Assert.True(game.TryMove(Direction.Left));
+            var result = new[,]
+            {
+                {0,0,0,0},
+                {4,0,0,0},
+                {2,8,0,0},
+                {4,16,4,2}
+            };
+            Assert.IsTrue(ValuesAreEqual(game, result));
+        }
+
+        [Test]
+        public void TestUndoAfterRight()
         {
             var gameMap = new[,]
             {
@@ -285,7 +330,7 @@ namespace MovementTests
         }
 
         [Test]
-        public void TestMoveBackAfterLeft()
+        public void TestUndoAfterLeft()
         {
             var gameMap = new[,]
             {
@@ -320,6 +365,30 @@ namespace MovementTests
             game.AddRandomTile();
             game.Undo();
             game.Undo();
+            Assert.IsTrue(ValuesAreEqual(game, gameMap));
+            Assert.AreEqual(0, game.Score);
+        }
+
+        [Test]
+        public void TestMassiveRandomUndo()
+        {
+            var gameMap = new[,]
+            {
+                {0,0,4,0},
+                {0,0,0,0},
+                {0,0,2,0},
+                {0,0,0,0}
+            };
+            var game = BuildGameMap(gameMap);
+            var rnd = new Random();
+            for (var i = 0; i < 13; i++)
+            {
+                var direction = (Direction)rnd.Next(Enum.GetNames(typeof(Direction)).Length);
+                game.TryMove(direction);
+                game.AddRandomTile();
+            }
+            for (var i = 0; i < 13; i++)
+                game.Undo();
             Assert.IsTrue(ValuesAreEqual(game, gameMap));
             Assert.AreEqual(0, game.Score);
         }

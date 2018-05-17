@@ -13,8 +13,8 @@ namespace Game2048
         public readonly int Height;
         private HashSet<Point> emptyPositions = new HashSet<Point>();
         public int Score { get; private set; }
-        public Stack<List<Transition>> Transitions = new Stack<List<Transition>>();
-        private Stack<Direction> Moves = new Stack<Direction>();
+        public Stack<List<Transition>> Transitions { get; private set; } = new Stack<List<Transition>>();
+        public Stack<Direction> Moves { get; private set; } = new Stack<Direction>();
 
         public Game(int width, int height)
         {
