@@ -86,22 +86,23 @@ namespace Game2048
             
             Controls.Add(table);
 
-            var panels = StartGame(game, gameField);
+            var panels = StartGame(game, gameField, head);
 
-            KeyDown += (sender, args) => MakeMove(game, panels, args.KeyData);
+            KeyDown += (sender, args) => MakeMove(game, panels, head, args.KeyData);
             head.Controls[3].Click += (sender, args) =>
             {
                 game = new Game(4, 4);
                 gameField = new GameField();
-                StartGame(game, gameField);
+                StartGame(game, gameField, head);
                 UpdateColors(game, panels);
             };
         }
 
-        private Control[,] StartGame(Game game, TableLayoutPanel field)
+        private Control[,] StartGame(Game game, TableLayoutPanel field, TableLayoutPanel head)
         {
             var panels = new Control[game.Width, game.Height];
             field.Controls.Clear();
+            head.Controls[1].Text = "0";
             
             for (var i = 0; i < game.Height; i++)
             {
@@ -126,32 +127,41 @@ namespace Game2048
             Invalidate();
         }
 
-        private void MakeMove(Game game, Control[,] panels, Keys key)
+        private void MakeMove(Game game, Control[,] panels, TableLayoutPanel head, Keys key)
         {
             var moved = false;
             switch (key)
             {
-                case Keys.W: case Keys.Up:
+                case Keys.W: 
+                case Keys.Up:
                     moved = game.TryMove(Direction.Up);
                     break;
-                case Keys.A: case Keys.Left:
+                case Keys.A: 
+                case Keys.Left:
                     moved = game.TryMove(Direction.Left);
                     break;
-                case Keys.S: case Keys.Down:
+                case Keys.S: 
+                case Keys.Down:
                     moved = game.TryMove(Direction.Down);
                     break;
-                case Keys.D: case Keys.Right:
+                case Keys.D: 
+                case Keys.Right:
                     moved = game.TryMove(Direction.Right);
                     break;
-                case Keys.Q: case Keys.Back:
+                case Keys.Q: 
+                case Keys.Back:
                     game.Undo();
                     break;
                 default:
                     return;
             }
-            
+
             if (moved)
+            {
                 game.AddRandomTile();
+                head.Controls[1].Text = game.Score.ToString();
+            }
+                
             UpdateColors(game, panels);
         }
     }
