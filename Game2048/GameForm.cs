@@ -80,9 +80,9 @@ namespace Game2048
                 BackColor = ColorTranslator.FromHtml("#776e65"),
                 Dock = DockStyle.Fill
             };
-            for (var i = 0; i < game.Height;i++)
+            for (var i = 0; i < game.Height; i++)
                 gameField.RowStyles.Add(new RowStyle(SizeType.Absolute, table.RowStyles[1].Height/ game.Height));
-            for (var i = 0; i < game.Width;i++)
+            for (var i = 0; i < game.Width; i++)
                 gameField.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, table.ColumnStyles[1].Width / game.Width));
             table.Controls.Add(gameField , 1, 1);
             
@@ -126,9 +126,13 @@ namespace Game2048
                     game.AddRandomTile();
                 for (var k = 0; k < 300; k++)
                 {
-                    for(var i = 0; i<game.Height;i++)
-                    for (var j = 0; j < game.Width; j++)
-                        panels[j,i].BackColor = game[j, i].Color;
+                    for (var i = 0; i < game.Height; i++)
+                    {
+                        for (var j = 0; j < game.Width; j++)
+                        {
+                            panels[j, i].BackColor = game[j, i].Color;
+                        }
+                    }
                     Invalidate();
                 }
             };
