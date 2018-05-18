@@ -380,15 +380,27 @@ namespace GameTests
                 {0,0,0,0}
             };
             var game = BuildGameMap(gameMap);
+            Console.WriteLine("INITIAL MAP");
+            Console.WriteLine(game.ToString() + '\n');
+            
+            Console.WriteLine("MOVES");
             var rnd = new Random();
             for (var i = 0; i < 13; i++)
             {
                 var direction = (Direction)rnd.Next(Enum.GetNames(typeof(Direction)).Length);
-                game.MakeMove(direction);
-                game.AddRandomTile();
+                Console.WriteLine(direction);
+                var moved = game.MakeMove(direction);
+                if (moved)
+                    game.AddRandomTile();
+                Console.WriteLine(game.ToString() + '\n');
             }
+
+            Console.WriteLine("UNDO");
             for (var i = 0; i < 13; i++)
+            {
                 game.Undo();
+                Console.WriteLine(game.ToString() + '\n');
+            }
             Assert.IsTrue(ValuesAreEqual(game, gameMap));
             Assert.AreEqual(0, game.Score);
         }

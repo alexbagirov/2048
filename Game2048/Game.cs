@@ -95,11 +95,11 @@ namespace Game2048
         public override string ToString()
         {
             var s = new StringBuilder();
-            for (var i = 0; i < Width; i++)
+            for (var i = 0; i < Height; i++)
             {
-                for (var j = 0; j < Height; j++)
+                for (var j = 0; j < Width; j++)
                 {
-                    s.Append(this[i, j].Value.ToString() + ' ');
+                    s.Append(this[j, i].Value.ToString() + ' ');
                 }
                 s.Append('\n');
             }
