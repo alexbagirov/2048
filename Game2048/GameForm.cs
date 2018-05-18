@@ -110,14 +110,14 @@ namespace Game2048
                 {
                     labels[j, i] = new Label
                     {
-                        Size = new Size(50, 50),
                         Dock = DockStyle.Fill,
                         BackColor = game[j, i].Color,
                         Text = game[j, i].Value == 0 ? "" : game[j, i].Value.ToString(),
                         Font = new Font("Arial", 30, FontStyle.Bold),
                         TextAlign = ContentAlignment.MiddleCenter,
                         ForeColor = ColorTranslator.FromHtml("#776e65"),
-                    };
+                        Margin = new Padding(0)
+                };
                     field.Controls.Add(labels[j, i], j, i);
                 }
             }
