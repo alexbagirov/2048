@@ -91,7 +91,7 @@ namespace Game2048
             var lastMove = Moves.Pop();
             var transitions = Transitions.Pop();
             var orderedTransitions = transitions
-                .OrderByDescending(t => t.Condition)
+                .OrderByDescending(t => t.Condition==Condition.Appeared)
                 .ThenBy(t =>
                 {
                     switch (lastMove)
