@@ -66,7 +66,6 @@ namespace GameTests
                 {8,64,2}
             });
             Assert.IsTrue(game.HasEnded());
-           
         }
 
         [Test]
