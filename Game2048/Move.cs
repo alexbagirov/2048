@@ -90,12 +90,9 @@ namespace Game2048
                 return;
             var lastMove = Moves.Pop();
             var transitions = Transitions.Pop();
-            foreach (var transition in transitions.Where(t => t.Condition == Condition.Appeared))
-                ChangeTile(transition.Finish, 0);
-            
             var orderedTransitions = transitions
-                .Where(t => t.Condition != Condition.Appeared)
-                .OrderBy(t =>
+                .OrderByDescending(t => t.Condition)
+                .ThenBy(t =>
                 {
                     switch (lastMove)
                     {
@@ -112,6 +109,11 @@ namespace Game2048
             
             foreach (var transition in orderedTransitions)
             {
+                if (transition.Condition == Condition.Appeared)
+                {
+                    ChangeTile(transition.Finish, 0);
+                    continue;
+                }
                 if (transition.StartValue != this[transition.Finish].Value)
                 {
                     Score -= this[transition.Finish].Value;
