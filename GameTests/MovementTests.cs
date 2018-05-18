@@ -1,10 +1,10 @@
-﻿using System.Drawing;
-using NUnit.Framework;
-using Game2048;
+﻿using System;
 using System.Collections.Generic;
-using System;
+using System.Drawing;
+using Game2048;
+using NUnit.Framework;
 
-namespace MovementTests
+namespace GameTests
 {
     [TestFixture]
     public class TryMoveTests
@@ -400,11 +400,11 @@ namespace MovementTests
             var game = new Game(width, height);
             for (var y = 0; y < height; y++)
                 for (var x = 0; x < width; x++)
-                    game.AddTile(new Point(x, y), mapToBuild[y, x]);
+                    game.ChangeTile(new Point(x, y), mapToBuild[y, x]);
             return game;
         }
 
-        public static bool ValuesAreEqual(Game game, int[,] result)
+        private static bool ValuesAreEqual(Game game, int[,] result)
         {
             for (var y = 0; y < game.Height; y++)
                 for (var x = 0; x < game.Width; x++)
@@ -413,7 +413,7 @@ namespace MovementTests
             return true;
         }
 
-        public static bool TransitionsAreEqual(List<Transition> list1,
+        private static bool TransitionsAreEqual(List<Transition> list1,
             List<Transition> list2)
         {
             if (list1.Count != list2.Count)

@@ -47,11 +47,11 @@ namespace Game2048
             var random = new Random();
             var point = emptyPositions.ElementAt(random.Next(emptyPositions.Count));
             var value = random.NextDouble() < 0.9 ? 2 : 4;
-            AddTile(point, value);
+            ChangeTile(point, value);
             Transitions.Peek().Add(new Transition(new Point(-1, -1), point, value, Condition.Appeared));
         }
         
-        public void AddTile(Point point, int value)
+        public void ChangeTile(Point point, int value)
         {
             this[point].ChangeValue(value);
             if (value != 0 && emptyPositions.Contains(point))
