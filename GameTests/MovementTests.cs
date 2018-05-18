@@ -19,7 +19,7 @@ namespace MovementTests
                 {0,2,0,0},
                 {0,0,0,0}
             });
-            game.TryMove(Direction.Up);
+            game.MakeMove(Direction.Up);
             var result = new[,]
             {
                 {0,4,0,2},
@@ -48,7 +48,7 @@ namespace MovementTests
                 {0,2,0,0},
                 {0,0,0,0}
             });
-            game.TryMove(Direction.Down);
+            game.MakeMove(Direction.Down);
             var result = new[,]
             {
                 {0,0,0,0},
@@ -77,7 +77,7 @@ namespace MovementTests
                 {0,0,0,0},
                 {0,0,0,2}
             });
-            game.TryMove(Direction.Left);
+            game.MakeMove(Direction.Left);
             var result = new[,]
             {
                 {0,0,0,0},
@@ -106,7 +106,7 @@ namespace MovementTests
                 {0,0,0,0},
                 {2,0,0,0}
             });
-            game.TryMove(Direction.Right);
+            game.MakeMove(Direction.Right);
             var result = new[,]
             {
                 {0,0,0,0},
@@ -139,7 +139,7 @@ namespace MovementTests
                 Direction.Right, Direction.Left, Direction.Up
             };
             foreach (var direction in moves)
-                game.TryMove(direction);
+                game.MakeMove(direction);
             moves.Reverse();
             foreach (var direction in moves)
                 Assert.AreEqual(direction, game.Moves.Pop());
@@ -155,7 +155,7 @@ namespace MovementTests
                 {0,0,0,0},
                 {4,0,2,2}
             });
-            game.TryMove(Direction.Right);
+            game.MakeMove(Direction.Right);
             var result = new[,]
             {
                 {0,0,0,0},
@@ -177,10 +177,10 @@ namespace MovementTests
                 {0,0,0,0},
                 {2,4,8,16}
             });
-            Assert.IsFalse(game.TryMove(Direction.Right));
-            Assert.IsFalse(game.TryMove(Direction.Left));
-            Assert.IsFalse(game.TryMove(Direction.Down));
-            Assert.IsTrue(game.TryMove(Direction.Up));
+            Assert.IsFalse(game.MakeMove(Direction.Right));
+            Assert.IsFalse(game.MakeMove(Direction.Left));
+            Assert.IsFalse(game.MakeMove(Direction.Down));
+            Assert.IsTrue(game.MakeMove(Direction.Up));
             Assert.AreEqual(0, game.Score);
         }
 
@@ -194,7 +194,7 @@ namespace MovementTests
                 {4,16,32,0},
                 {4,8,32,128}
             });
-            game.TryMove(Direction.Down);
+            game.MakeMove(Direction.Down);
             var result = new[,]
             {
                 {0,0,0,0},
@@ -216,13 +216,13 @@ namespace MovementTests
                 {0,16,0,0},
                 {4,8,0,0}
             });
-            game.TryMove(Direction.Down);
-            game.TryMove(Direction.Down);
-            game.TryMove(Direction.Right);
-            game.TryMove(Direction.Up);
-            game.TryMove(Direction.Up);
-            game.TryMove(Direction.Left);
-            game.TryMove(Direction.Down);
+            game.MakeMove(Direction.Down);
+            game.MakeMove(Direction.Down);
+            game.MakeMove(Direction.Right);
+            game.MakeMove(Direction.Up);
+            game.MakeMove(Direction.Up);
+            game.MakeMove(Direction.Left);
+            game.MakeMove(Direction.Down);
             var result = new[,]
             {
                 {0,0,0,0},
@@ -244,7 +244,7 @@ namespace MovementTests
             });
             Assert.True(game.IsEmpty(new Point(1, 0)));
             Assert.True(game.IsEmpty(new Point(1, 1)));
-            game.TryMove(Direction.Down);
+            game.MakeMove(Direction.Down);
             Assert.True(game.IsEmpty(new Point(1, 0)));
             Assert.True(game.IsEmpty(new Point(1, 1)));
             Assert.True(game.IsEmpty(new Point(0, 0)));
@@ -263,7 +263,7 @@ namespace MovementTests
             };
 
             var game = BuildGameMap(gameMap);
-            game.TryMove(Direction.Down);
+            game.MakeMove(Direction.Down);
             game.Undo();
             Assert.IsTrue(ValuesAreEqual(game, gameMap));
             Assert.AreEqual(0, game.Score);
@@ -281,7 +281,7 @@ namespace MovementTests
             };
 
             var game = BuildGameMap(gameMap);
-            game.TryMove(Direction.Up);
+            game.MakeMove(Direction.Up);
             game.Undo();
             Assert.IsTrue(ValuesAreEqual(game, gameMap));
             Assert.AreEqual(0, game.Score);
@@ -299,8 +299,8 @@ namespace MovementTests
             };
 
             var game = BuildGameMap(gameMap);
-            Assert.False(game.TryMove(Direction.Right));
-            Assert.True(game.TryMove(Direction.Left));
+            Assert.False(game.MakeMove(Direction.Right));
+            Assert.True(game.MakeMove(Direction.Left));
             var result = new[,]
             {
                 {0,0,0,0},
@@ -323,7 +323,7 @@ namespace MovementTests
             };
 
             var game = BuildGameMap(gameMap);
-            game.TryMove(Direction.Right);
+            game.MakeMove(Direction.Right);
             game.Undo();
             Assert.IsTrue(ValuesAreEqual(game, gameMap));
             Assert.AreEqual(0, game.Score);
@@ -341,7 +341,7 @@ namespace MovementTests
             };
 
             var game = BuildGameMap(gameMap);
-            game.TryMove(Direction.Left);
+            game.MakeMove(Direction.Left);
             game.Undo();
             Assert.IsTrue(ValuesAreEqual(game, gameMap));
             Assert.AreEqual(0, game.Score);
@@ -359,9 +359,9 @@ namespace MovementTests
             };
 
             var game = BuildGameMap(gameMap);
-            game.TryMove(Direction.Right);
+            game.MakeMove(Direction.Right);
             game.AddRandomTile();
-            game.TryMove(Direction.Down);
+            game.MakeMove(Direction.Down);
             game.AddRandomTile();
             game.Undo();
             game.Undo();
@@ -384,7 +384,7 @@ namespace MovementTests
             for (var i = 0; i < 13; i++)
             {
                 var direction = (Direction)rnd.Next(Enum.GetNames(typeof(Direction)).Length);
-                game.TryMove(direction);
+                game.MakeMove(direction);
                 game.AddRandomTile();
             }
             for (var i = 0; i < 13; i++)

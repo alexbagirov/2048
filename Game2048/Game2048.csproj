@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Move.cs" />
     <Compile Include="Transition.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="MovementPresets.cs" />
