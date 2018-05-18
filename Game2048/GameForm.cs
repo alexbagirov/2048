@@ -98,7 +98,7 @@ namespace Game2048
             };
         }
 
-        private Control[,] StartGame(Game game, TableLayoutPanel field, TableLayoutPanel head)
+        private static Control[,] StartGame(Game game, TableLayoutPanel field, TableLayoutPanel head)
         {
             var panels = new Control[game.Width, game.Height];
             field.Controls.Clear();
@@ -134,19 +134,19 @@ namespace Game2048
             {
                 case Keys.W: 
                 case Keys.Up:
-                    moved = game.TryMove(Direction.Up);
+                    moved = game.MakeMove(Direction.Up);
                     break;
                 case Keys.A: 
                 case Keys.Left:
-                    moved = game.TryMove(Direction.Left);
+                    moved = game.MakeMove(Direction.Left);
                     break;
                 case Keys.S: 
                 case Keys.Down:
-                    moved = game.TryMove(Direction.Down);
+                    moved = game.MakeMove(Direction.Down);
                     break;
                 case Keys.D: 
                 case Keys.Right:
-                    moved = game.TryMove(Direction.Right);
+                    moved = game.MakeMove(Direction.Right);
                     break;
                 case Keys.Q: 
                 case Keys.Back:

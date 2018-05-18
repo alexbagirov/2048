@@ -87,7 +87,7 @@ namespace GameTests
                 {8,64,32},
                 {8,32,16}
             });
-            game.TryMove(Direction.Up);
+            game.MakeMove(Direction.Up);
             game.AddRandomTile();
             Assert.IsTrue(game.HasEnded());
         }
@@ -113,7 +113,7 @@ namespace GameTests
                 {2,64,32},
                 {2,32,16}
             });
-            game.TryMove(Direction.Down);
+            game.MakeMove(Direction.Down);
             game.AddRandomTile();
             Assert.IsFalse(game.HasEnded());
         }
