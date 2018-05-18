@@ -159,8 +159,8 @@ namespace Game2048
             if (moved)
             {
                 game.AddRandomTile();
-                head.Controls[1].Text = game.Score.ToString();
             }
+            head.Controls[1].Text = game.Score.ToString();
                 
             UpdateColors(game, panels);
         }

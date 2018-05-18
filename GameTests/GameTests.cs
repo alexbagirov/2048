@@ -1,7 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
 using Game2048;
-using MovementTests;
 
 namespace GameTests
 {

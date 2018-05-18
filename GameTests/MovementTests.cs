@@ -1,10 +1,10 @@
-﻿using System.Drawing;
-using NUnit.Framework;
-using Game2048;
+﻿using System;
 using System.Collections.Generic;
-using System;
+using System.Drawing;
+using Game2048;
+using NUnit.Framework;
 
-namespace MovementTests
+namespace GameTests
 {
     [TestFixture]
     public class TryMoveTests
@@ -380,15 +380,27 @@ namespace MovementTests
                 {0,0,0,0}
             };
             var game = BuildGameMap(gameMap);
+            Console.WriteLine("INITIAL MAP");
+            Console.WriteLine(game.ToString() + '\n');
+            
+            Console.WriteLine("MOVES");
             var rnd = new Random();
             for (var i = 0; i < 13; i++)
             {
                 var direction = (Direction)rnd.Next(Enum.GetNames(typeof(Direction)).Length);
-                game.MakeMove(direction);
-                game.AddRandomTile();
+                Console.WriteLine(direction);
+                var moved = game.MakeMove(direction);
+                if (moved)
+                    game.AddRandomTile();
+                Console.WriteLine(game.ToString() + '\n');
             }
+
+            Console.WriteLine("UNDO");
             for (var i = 0; i < 13; i++)
+            {
                 game.Undo();
+                Console.WriteLine(game.ToString() + '\n');
+            }
             Assert.IsTrue(ValuesAreEqual(game, gameMap));
             Assert.AreEqual(0, game.Score);
         }
@@ -400,11 +412,11 @@ namespace MovementTests
             var game = new Game(width, height);
             for (var y = 0; y < height; y++)
                 for (var x = 0; x < width; x++)
-                    game.AddTile(new Point(x, y), mapToBuild[y, x]);
+                    game.ChangeTile(new Point(x, y), mapToBuild[y, x]);
             return game;
         }
 
-        public static bool ValuesAreEqual(Game game, int[,] result)
+        private static bool ValuesAreEqual(Game game, int[,] result)
         {
             for (var y = 0; y < game.Height; y++)
                 for (var x = 0; x < game.Width; x++)
@@ -413,7 +425,7 @@ namespace MovementTests
             return true;
         }
 
-        public static bool TransitionsAreEqual(List<Transition> list1,
+        private static bool TransitionsAreEqual(List<Transition> list1,
             List<Transition> list2)
         {
             if (list1.Count != list2.Count)

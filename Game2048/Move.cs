@@ -90,30 +90,36 @@ namespace Game2048
                 return;
             var lastMove = Moves.Pop();
             var transitions = Transitions.Pop();
-            foreach (var transition in transitions.Where(t => t.Condition == Condition.Appeared))
-                AddTile(transition.Finish, 0);
             var orderedTransitions = transitions
-                .Where(t => t.Condition != Condition.Appeared)
-                .OrderBy(t =>
-                {
-                    if (lastMove == Direction.Right)
-                        return t.Start.X;
-                    return -t.Start.X;
-                })
+                .OrderByDescending(t => t.Condition == Condition.Appeared)
                 .ThenBy(t =>
                 {
-                    if (lastMove == Direction.Down)
-                        return t.Start.Y;
-                    return -t.Start.Y;
+                    switch (lastMove)
+                    {
+                        case Direction.Right:
+                            return t.Start.X;
+                        case Direction.Left:
+                            return -t.Start.X;
+                        case Direction.Down:
+                            return t.Start.Y;
+                        default:
+                            return -t.Start.Y;
+                    }
                 });
+            
             foreach (var transition in orderedTransitions)
             {
+                if (transition.Condition == Condition.Appeared)
+                {
+                    ChangeTile(transition.Finish, 0);
+                    continue;
+                }
                 if (transition.StartValue != this[transition.Finish].Value)
                 {
                     Score -= this[transition.Finish].Value;
                     var previousValue = this[transition.Finish].Value / 2;
-                    AddTile(transition.Finish, previousValue);
-                    AddTile(transition.Start, previousValue);
+                    ChangeTile(transition.Finish, previousValue);
+                    ChangeTile(transition.Start, previousValue);
                 }
                 else
                     MoveValue(transition.Finish, transition.Start);
