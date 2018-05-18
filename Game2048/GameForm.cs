@@ -5,9 +5,9 @@ namespace Game2048
 {
     public sealed partial class GameForm : Form
     {
-        public GameForm()
+        public GameForm(int width, int height)
         {
-            var game = new Game(4, 4);
+            var game = new Game(width, height);
             
             Size = Screen.PrimaryScreen.WorkingArea.Size;
             MinimumSize = Size;
