@@ -7,21 +7,17 @@ namespace Game2048
     {
         public int Value { get; private set; }
         public Color Color { get; private set; }
-        public bool Hidden { get; private set; }
 
         public Tile(int value = 0)
         {
             Value = value;
             Color = GetColor(Value);
-            if (Value == 0)
-                Hidden = true;
         }
 
         public void ChangeValue(int value)
         {
             Value = value;
             Color = GetColor(Value);
-            Hidden = Value == 0;
         }
 
         public void AddValue(int value) => ChangeValue(Value + value);
@@ -42,6 +38,6 @@ namespace Game2048
             {2048, ColorTranslator.FromHtml("#edc22e")}
         };
 
-        public static Color GetColor(int value) => Colors[value];
+        private static Color GetColor(int value) => Colors[value];
     }
 }
