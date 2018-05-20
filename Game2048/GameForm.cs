@@ -77,11 +77,12 @@ namespace Game2048
 
             table.Controls.Add(head, 1, 0);
 
-            var gameField = new GameField();
-            for (var i = 0; i < game.Height; i++)
-                gameField.RowStyles.Add(new RowStyle(SizeType.Absolute, table.RowStyles[1].Height/ game.Height));
-            for (var i = 0; i < game.Width; i++)
-                gameField.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, table.ColumnStyles[1].Width / game.Width));
+            var gameField = new Label
+            {
+                //Dock = DockStyle.Fill,
+                Size = new Size(469, 469),
+                BackColor = ColorTranslator.FromHtml("#776e65"),
+            };
             table.Controls.Add(gameField , 1, 1);
             
             Controls.Add(table);
@@ -92,35 +93,36 @@ namespace Game2048
             head.Controls[3].Click += (sender, args) =>
             {
                 game = new Game(4, 4);
-                gameField = new GameField();
+
                 StartGame(game, gameField, head);
                 UpdateColors(game, labels);
             };
         }
 
-        private Control[,] StartGame(Game game, TableLayoutPanel field, TableLayoutPanel head)
+        private Control[,] StartGame(Game game, Label field, TableLayoutPanel head)
         {
             var labels = new Control[game.Width, game.Height];
             field.Controls.Clear();
             head.Controls[1].Text = "0";
-            
+            var size = new Size(field.Size.Height / 4 - 15, field.Size.Height / 4 - 15);
+            var dx = (field.Size.Width - game.Width * size.Width) / (game.Width+1);
             for (var i = 0; i < game.Height; i++)
-            {
                 for (var j = 0; j < game.Width; j++)
                 {
                     labels[j, i] = new Label
                     {
-                        Dock = DockStyle.Fill,
+                        Size = size,
                         BackColor = game[j, i].Color,
                         Text = game[j, i].Value == 0 ? "" : game[j, i].Value.ToString(),
                         Font = new Font("Arial", 30, FontStyle.Bold),
                         TextAlign = ContentAlignment.MiddleCenter,
                         ForeColor = ColorTranslator.FromHtml("#776e65"),
-                        Margin = new Padding(0)
-                };
-                    field.Controls.Add(labels[j, i], j, i);
+                        Margin = new Padding(0),
+                        Location = new Point(size.Width * j + (j+1)*dx, size.Height * i + (i+1)*dx)
+                    };
+                    field.Controls.Add(labels[j, i]);
                 }
-            }
+
             return labels;
         }
 
