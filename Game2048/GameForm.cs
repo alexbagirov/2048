@@ -177,14 +177,7 @@ namespace Game2048
                 
             UpdateColors(game, labels);
             if (game.HasEnded())
-            {
-                if (game.WasWon)
-                    ShowMessage(String.Format("Congratulations, you won!!!! But game is over. Your score is {0}", game.Score.ToString()));
-                else
-                    ShowMessage(String.Format("Sorry, but Game is Over. Your score is {0}", game.Score.ToString()));
-            }
-            if (game.WasWon)
-                ShowMessage(String.Format("Congratulations, you won!!!! You may cointinue the game. Your score is {0}", game.Score.ToString()));
+                ShowMessage(String.Format("Game is Over. Your score is {0}", game.Score.ToString()));
         }
 
         private void ShowMessage(string message)
