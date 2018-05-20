@@ -6,7 +6,7 @@ namespace Game2048
     {
         public static void Main()
         {
-            var form = new GameForm(4, 4);
+            var form = new GameForm(2, 2);
             Application.Run(form);
         }
     }
