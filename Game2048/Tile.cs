@@ -28,7 +28,7 @@ namespace Game2048
         
         private static readonly Dictionary<int, Color> Colors = new Dictionary<int, Color>
         {
-            {0, ColorTranslator.FromHtml("#bbada0")},
+            {0, Color.FromArgb(205, 193, 180)},
             {2, ColorTranslator.FromHtml("#eee4da")},
             {4, ColorTranslator.FromHtml("#ede0c8")},
             {8, ColorTranslator.FromHtml("#f2b179")},

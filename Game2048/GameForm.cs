@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
+using System;
 
 namespace Game2048
 {
@@ -81,7 +82,7 @@ namespace Game2048
             {
                 //Dock = DockStyle.Fill,
                 Size = new Size(469, 469),
-                BackColor = ColorTranslator.FromHtml("#776e65"),
+                BackColor = ColorTranslator.FromHtml("#bbada0"),
             };
             table.Controls.Add(gameField , 1, 1);
             
@@ -104,7 +105,7 @@ namespace Game2048
             var labels = new Control[game.Width, game.Height];
             field.Controls.Clear();
             head.Controls[1].Text = "0";
-            var size = new Size(field.Size.Height / 4 - 15, field.Size.Height / 4 - 15);
+            var size = new Size(field.Size.Height / game.Height - 15, field.Size.Height / game.Height - 15);
             var dx = (field.Size.Width - game.Width * size.Width) / (game.Width+1);
             for (var i = 0; i < game.Height; i++)
                 for (var j = 0; j < game.Width; j++)
@@ -175,15 +176,24 @@ namespace Game2048
             }
                 
             UpdateColors(game, labels);
+            if (game.HasEnded())
+            {
+                if (game.WasWon)
+                    ShowMessage(String.Format("Congratulations, you won!!!! But game is over. Your score is {0}", game.Score.ToString()));
+                else
+                    ShowMessage(String.Format("Sorry, but Game is Over. Your score is {0}", game.Score.ToString()));
+            }
+            if (game.WasWon)
+                ShowMessage(String.Format("Congratulations, you won!!!! You may cointinue the game. Your score is {0}", game.Score.ToString()));
+        }
+
+        private void ShowMessage(string message)
+        {
+            var caption = "";
+            MessageBoxButtons buttons = MessageBoxButtons.OK;
+
+            var result = MessageBox.Show(message, caption, buttons);
         }
     }
 
-    public sealed class GameField : TableLayoutPanel
-    {
-        public GameField()
-        {
-            BackColor = ColorTranslator.FromHtml("#776e65");
-            Dock = DockStyle.Fill;
-        }
-    }
 }

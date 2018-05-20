@@ -15,6 +15,7 @@ namespace Game2048
         public int Score { get; private set; }
         public Stack<List<Transition>> Transitions { get; private set; } = new Stack<List<Transition>>();
         public Stack<Direction> Moves { get; private set; } = new Stack<Direction>();
+        public bool WasWon { get; private set; } = false;
 
         public Game(int width, int height)
         {
@@ -164,17 +165,16 @@ namespace Game2048
         public bool HasEnded()
         {
             for (var i = 0; i < Width; i++)
-            {
                 for (var j = 0; j < Height; j++)
                 {
+                    if (this[i, j].Value >= 2048 && ! WasWon)
+                        WasWon = true;
                     if (TileHasEqualNeighbours(i, j) || this[i, j].Value == 0)
                         return false;
                 }
-            }
-
             return true;
         }
-
+        
         private bool TileHasEqualNeighbours(int x, int y)
         {
             var point = new Point(x, y);
@@ -231,4 +231,5 @@ namespace Game2048
             }
         }
     }
+
 }
