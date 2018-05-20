@@ -119,7 +119,7 @@ namespace Game2048
                         TextAlign = ContentAlignment.MiddleCenter,
                         ForeColor = ColorTranslator.FromHtml("#776e65"),
                         Margin = new Padding(0),
-                        Location = new Point(size.Width * j + (j+1)*dx, size.Height * i + (i+1)*dx)
+                        Location = new Point(size.Width * j + (j + 1) * dx, size.Height * i + (i + 1) * dx)
                     };
                     field.Controls.Add(labels[j, i]);
                 }
@@ -188,5 +188,4 @@ namespace Game2048
             var result = MessageBox.Show(message, caption, buttons);
         }
     }
-
 }

@@ -230,5 +230,4 @@ namespace Game2048
             }
         }
     }
-
 }
