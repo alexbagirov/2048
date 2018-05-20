@@ -100,7 +100,7 @@ namespace Game2048
             };
         }
 
-        private Control[,] StartGame(Game game, Label field, TableLayoutPanel head)
+        private static Control[,] StartGame(Game game, TableLayoutPanel field, TableLayoutPanel head)
         {
             var labels = new Control[game.Width, game.Height];
             field.Controls.Clear();
