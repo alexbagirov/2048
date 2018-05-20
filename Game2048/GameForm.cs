@@ -1,5 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
+using System.Threading;
+using System.Collections.Generic;
 
 namespace Game2048
 {
@@ -89,6 +91,7 @@ namespace Game2048
             var labels = StartGame(game, gameField, head);
 
             KeyDown += (sender, args) => MakeMove(game, gameField, labels, head, args.KeyData);
+
             head.Controls[3].Click += (sender, args) =>
             {
                 game = new Game(4, 4);
@@ -108,6 +111,7 @@ namespace Game2048
             for (var i = 0; i < game.Height; i++)
                 for (var j = 0; j < game.Width; j++)
                 {
+                    var locatin = new Point(size.Width * j + (j + 1) * dx, size.Height * i + (i + 1) * dx);
                     labels[j, i] = new Label
                     {
                         Size = size,
@@ -117,7 +121,7 @@ namespace Game2048
                         TextAlign = ContentAlignment.MiddleCenter,
                         ForeColor = ColorTranslator.FromHtml("#776e65"),
                         Margin = new Padding(0),
-                        Location = new Point(size.Width * j + (j + 1) * dx, size.Height * i + (i + 1) * dx)
+                        Location = locatin
                     };
                     field.Controls.Add(labels[j, i]);
                 }
@@ -163,6 +167,14 @@ namespace Game2048
                 case Keys.Back:
                     game.Undo();
                     break;
+                case Keys.T:
+                    for (var i = 0; i < 300; i++)
+                    {
+                        labels[0,0].Top++;
+                        Thread.Sleep(1);
+                        gameField.Refresh();
+                    }
+                    break;
                 default:
                     return;
             }
@@ -170,21 +182,124 @@ namespace Game2048
             if (moved)
             {
                 game.AddRandomTile();
+                head.Controls[1].Text = game.Score.ToString();
+
+                Animate(game, gameField,labels);
+                UpdateColors(game, labels);
+                if (game.HasEnded())
+                {
+                    ShowMessage($"Game is Over. Your score is {game.Score.ToString()}");
+                    game = new Game(game.Width, game.Height);
+                    StartGame(game, gameField, head);
+                }
             }
-            head.Controls[1].Text = game.Score.ToString();
-                
-            UpdateColors(game, labels);
-            if (game.HasEnded())
+        }
+
+
+        private void Animate(Game game, Label field, Control[,] oldLabels)
+        {
+            var animations = new List<Animation>();
+            var labels = new Label[game.Width, game.Height];
+            foreach (var trasition in game.Transitions.Peek())
             {
-                ShowMessage($"Game is Over. Your score is {game.Score.ToString()}");
-                game = new Game(game.Width, game.Height);
-                StartGame(game, gameField, head);
+
+                var j = trasition.Start.X;
+                var i = trasition.Start.Y;
+                
+                if (j == -1 && i == -1)
+                {
+                    continue;
+                }
+                oldLabels[j, i].BackColor = Tile.GetColor(0);
+                oldLabels[j, i].Text = "";
+                var size = new Size(field.Size.Height / game.Height - 15, field.Size.Height / game.Height - 15);
+                var dx = (field.Size.Width - game.Width * size.Width) / (game.Width + 1);
+                var locatin = new Point(size.Width * j + (j + 1) * dx, size.Height * i + (i + 1) * dx);
+                labels[trasition.Start.X, trasition.Start.Y] = new Label
+                    {
+                        Size = size,
+                        BackColor = Tile.GetColor(trasition.StartValue),
+                        Text = trasition.StartValue == 0 ? "" : trasition.StartValue.ToString(),
+                        Font = new Font("Arial", 30, FontStyle.Bold),
+                        TextAlign = ContentAlignment.MiddleCenter,
+                        ForeColor = ColorTranslator.FromHtml("#776e65"),
+                        Margin = new Padding(0),
+                        Location = locatin
+                    };
+                    field.Controls.Add(labels[j, i]);
+                animations.Add(new Animation(trasition, field, game));
+            }
+            var count = 0;
+            while (true)
+            {
+                if (count == animations.Count)
+                    break;
+                foreach (var animation in animations)
+                {
+                    if (animation.XToGo == 0 && animation.YToGo == 0)
+                    {
+                        continue;
+                    }
+                    var startX = animation.Start.X;
+                    var startY = animation.Start.Y;
+
+                    if (animation.XToGo < 0)
+                    {
+                        animation.XToGo++;
+                        labels[startX,startY].Left--;
+                        labels[startX, startY].BringToFront();
+                    }
+                    if (animation.XToGo > 0)
+                    {
+                        animation.XToGo--;
+                        labels[startX,startY].Left++;
+                        labels[startX, startY].BringToFront();
+                    }
+                    if (animation.YToGo < 0)
+                    {
+                        animation.YToGo++;
+                        labels[startX,startY].Top--;
+                        labels[startX, startY].BringToFront();
+                    }
+                    if (animation.YToGo > 0)
+                    {
+                        animation.YToGo--;
+                        labels[startX,startY].Top++;
+                        labels[startX, startY].BringToFront();
+                    }
+                    if (animation.XToGo == 0 && animation.YToGo == 0)
+                    {
+                        count++;
+                    }
+                    field.Refresh();
+                }
+            }
+            foreach (var label in labels)
+            {
+                field.Controls.Remove(label);
             }
         }
 
         private static void ShowMessage(string message)
         {
             MessageBox.Show(message, "", MessageBoxButtons.OK);
+        }
+    }
+
+    public class Animation
+    {
+        public int XToGo;
+        public int YToGo;
+        public Point Start;
+        public Point Finish;
+        public Animation(Transition transiton, Label field, Game game)
+        {
+            Start = transiton.Start;
+            Finish = transiton.Finish;
+            var size = new Size(field.Size.Height / game.Height - 15, field.Size.Height / game.Height - 15);
+            var dx = (field.Size.Width - game.Width * size.Width) / (game.Width + 1);
+            XToGo = (transiton.Finish.X - transiton.Start.X)*(dx + size.Width);
+            YToGo = (transiton.Finish.Y - transiton.Start.Y)*(dx + size.Height);
         }
     }
 }

@@ -38,6 +38,6 @@ namespace Game2048
             {2048, ColorTranslator.FromHtml("#edc22e")}
         };
 
-        private static Color GetColor(int value) => Colors[value];
+        public static Color GetColor(int value) => Colors[value];
     }
 }
