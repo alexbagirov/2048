@@ -79,7 +79,6 @@ namespace Game2048
 
             var gameField = new Label
             {
-                //Dock = DockStyle.Fill,
                 Size = new Size(469, 469),
                 BackColor = ColorTranslator.FromHtml("#bbada0"),
             };
@@ -89,7 +88,7 @@ namespace Game2048
 
             var labels = StartGame(game, gameField, head);
 
-            KeyDown += (sender, args) => MakeMove(game, labels, head, args.KeyData);
+            KeyDown += (sender, args) => MakeMove(game, gameField, labels, head, args.KeyData);
             head.Controls[3].Click += (sender, args) =>
             {
                 game = new Game(4, 4);
@@ -139,7 +138,7 @@ namespace Game2048
             Invalidate();
         }
 
-        private void MakeMove(Game game, Control[,] labels, TableLayoutPanel head, Keys key)
+        private void MakeMove(Game game, Label gameField, Control[,] labels, TableLayoutPanel head, Keys key)
         {
             var moved = false;
             switch (key)
@@ -176,7 +175,11 @@ namespace Game2048
                 
             UpdateColors(game, labels);
             if (game.HasEnded())
+            {
                 ShowMessage($"Game is Over. Your score is {game.Score.ToString()}");
+                game = new Game(game.Width, game.Height);
+                StartGame(game, gameField, head);
+            }
         }
 
         private static void ShowMessage(string message)
