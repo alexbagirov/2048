@@ -1,10 +1,15 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Game2048
 {
     public sealed partial class GameForm : Form
     {
+        private static readonly Dictionary<Point, Point> Coordinates = new Dictionary<Point, Point>();
+        
         public GameForm(int width, int height)
         {
             var game = new Game(width, height);
@@ -94,7 +99,7 @@ namespace Game2048
                 game = new Game(4, 4);
 
                 StartGame(game, gameField, head);
-                UpdateColors(game, labels);
+                MoveTiles(game, labels);
             };
         }
 
@@ -119,23 +124,45 @@ namespace Game2048
                         Margin = new Padding(0),
                         Location = new Point(size.Width * j + (j + 1) * dx, size.Height * i + (i + 1) * dx)
                     };
+                    Coordinates.Add(new Point(j, i), new Point(labels[j, i].Location.X, labels[j, i].Location.Y));
                     field.Controls.Add(labels[j, i]);
                 }
-
             return labels;
         }
 
-        private void UpdateColors(Game game, Control[,] labels)
+        private void MoveTiles(Game game, Control[,] labels)
         {
-            for (var i = 0; i < game.Height; i++)
+            var transitions = game.Transitions.Peek();
+            foreach (var transition in transitions.Where(t => t.Condition == Condition.Moved))
             {
-                for (var j = 0; j < game.Width; j++)
-                {
-                    labels[j, i].Text = game[j, i].Value == 0 ? "" : game[j, i].Value.ToString();
-                    labels[j, i].BackColor = game[j, i].Color;
-                }
+                new Action(() => MoveTile(transition, labels)).BeginInvoke(null, null);
             }
-            Invalidate();
+        }
+
+        private void MoveTile(Transition transition, Control[,] labels)
+        {
+            var to = Coordinates[transition.Finish];
+            
+            if (labels[transition.Start.X, transition.Start.Y].Location.X == to.X)
+            {
+                if (labels[transition.Start.X, transition.Start.Y].Location.Y < to.Y)
+                    while (labels[transition.Start.X, transition.Start.Y].Location.Y != to.Y)
+                        BeginInvoke(new Action(() => labels[transition.Start.X, transition.Start.Y].Top += 1));
+                else
+                    while (labels[transition.Start.X, transition.Start.Y].Location.Y != to.Y)
+                        BeginInvoke(new Action(() => labels[transition.Start.X, transition.Start.Y].Top -= 1));
+            }
+            else
+            {
+                if (labels[transition.Start.X, transition.Start.Y].Location.X < to.X)
+                    while (labels[transition.Start.X, transition.Start.Y].Location.X != to.X)
+                        BeginInvoke(new Action(() => labels[transition.Start.X, transition.Start.Y].Left += 1));
+                else
+                    while (labels[transition.Start.X, transition.Start.Y].Location.X != to.X)
+                        BeginInvoke(new Action(() => labels[transition.Start.X, transition.Start.Y].Left -= 1));
+            }
+
+            BeginInvoke(new Action(Refresh));
         }
 
         private void MakeMove(Game game, Label gameField, Control[,] labels, TableLayoutPanel head, Keys key)
@@ -173,7 +200,7 @@ namespace Game2048
             }
             head.Controls[1].Text = game.Score.ToString();
                 
-            UpdateColors(game, labels);
+            MoveTiles(game, labels);
             if (game.HasEnded())
             {
                 ShowMessage($"Game is Over. Your score is {game.Score.ToString()}");
