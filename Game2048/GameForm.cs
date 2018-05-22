@@ -271,7 +271,7 @@ namespace Game2048
                     {
                         count++;
                     }
-                    field.Refresh();
+                    field.Update();
                 }
             }
             foreach (var label in labels)
