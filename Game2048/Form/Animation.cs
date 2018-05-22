@@ -42,19 +42,15 @@ namespace Game2048
         private static void MoveLabels(Control field, List<Animation> animations, Label[,] movingLabels)
         {
             var count = 0;
-            var coeficient = 1;
-            if (animations.Count > 4)
-                coeficient = 2;
             while (true)
             {
                 if (count == animations.Count)
                     break;
-
+                var coeficient = animations.Count - count;
                 foreach (var animation in animations)
                 {
                     if (animation.RemainingX == 0 && animation.RemainingY == 0)
                         continue;
-
                     var startX = animation.Start.X;
                     var startY = animation.Start.Y;
                     var dx = animation.RemainingX < 0 ? -coeficient : (animation.RemainingX == 0 ? 0 : coeficient);
